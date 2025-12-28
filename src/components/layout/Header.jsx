@@ -43,33 +43,37 @@ export default function Header() {
 
   return (
     <div className="border-b bg-white border-gray-300">
-      <div className="max-w-7xl mx-auto px-4 flex items-center justify-between gap-5">
+      <div className="md:max-w-7xl mx-auto md:px-4 px-0 flex md:flex-row flex-col items-center justify-between md:gap-5 gap-0">
 
         {/* Logo */}
         <Image src="/logo.png" alt="Logo" width={180} height={40} priority />
 
         {/* Search */}
-        <div className="hidden md:flex flex-1 justify-center">
+        <div className="flex flex-1 justify-center md:mb-0 mb-5">
           <div className="relative w-full max-w-lg">
             <Search
               size={18}
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 font-medium"
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
             />
 
             <input
               type="search"
               placeholder={placeholder}
-              className="w-full border rounded-md pl-10 pr-24 py-2 outline-none border-gray-300"
+              className="w-full border rounded-md pl-10 md:pr-24 pr-10 py-2 outline-none border-gray-300"
             />
 
-            <button className="absolute right-0 top-0 h-full px-4 bg-[var(--primary)] hover:bg-[var(--secondary)] text-white rounded-r-md">
-              Search
-            </button>
+            <button
+                className="absolute right-0 top-0 h-full px-4 bg-[var(--primary)] hover:bg-[var(--secondary)] text-white rounded-r-md flex items-center gap-2 transition-colors"
+              >
+                <Search size={18} />
+                <span className="hidden sm:inline">Search</span>
+              </button>
+
           </div>
         </div>
 
         {/* Icons */}
-        <div className="flex items-center gap-10">
+        <div className="md:flex hidden items-center gap-10">
           <Icon label="Cart" Icon={ShoppingCart} count={3} />
           <Icon label="Book" Icon={BookOpen} />
           <Icon label="Track" Icon={Truck} />

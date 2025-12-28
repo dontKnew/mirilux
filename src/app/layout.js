@@ -1,5 +1,6 @@
 import { Poppins } from 'next/font/google'
 import "@/styles/globals.css";
+import PageLoader from '@/components/PageLoader';
 
 const font = Poppins({
   subsets: ['latin'],

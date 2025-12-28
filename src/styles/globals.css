@@ -19,9 +19,14 @@ body {
   color: var(--secondary);
   font-family: var(--font-roboto), system-ui, sans-serif;
   font-weight:500;
+  /* overflow-x: hidden; */
 }
 button {
   cursor: pointer;
+}
+
+h1, h2, h3, h4 {
+  color:var(--secondary)
 }
 
 /* darker placeholder */
@@ -42,4 +47,41 @@ button {
 }
 .gray {
   @apply text-gray-500;
+}
+.border-color {
+  @apply text-gray-300
+}
+
+/* Swiper pagination dots - MiriLux style */
+.swiper-pagination-bullet {
+  background: #cbd5e1; /* gray-300 */
+  opacity: 1;
+}
+
+.swiper-pagination-bullet {
+  background: #cbd5e1; /* gray-300 */
+  opacity: 1;
+}
+
+.swiper-pagination-bullet-active {
+  background: var(--primary);
+}
+
+.swiper-initialized {
+  padding-bottom:45px !important;
+}
+
+@keyframes popup {
+  0% {
+    opacity: 0;
+    transform: scale(0.9) translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.animate-popup {
+  animation: popup 0.4s ease-out forwards;
 }

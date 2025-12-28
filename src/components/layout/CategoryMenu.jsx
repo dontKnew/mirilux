@@ -49,7 +49,7 @@ export default function CategoryMenu() {
 
   return (
     <div className="border-b border-gray-300 shadow-xl/30 shadow-white">
-      <div className="max-w-7xl mx-auto px-4">
+      <div className="md:max-w-7xl mx-auto px-4">
         <div
           ref={containerRef}
           className="relative flex gap-6 overflow-x-auto scrollbar-hide justify-between"
@@ -59,7 +59,7 @@ export default function CategoryMenu() {
               key={cat}
               ref={(el) => (itemRefs.current[cat] = el)}
               onClick={() => setActive(cat)}
-              className={`py-3  whitespace-nowrap text-sm transition-colors cursor-pointer ${
+              className={`py-3  whitespace-nowrap  transition-colors cursor-pointer ${
                 active === cat
                   ? "text-[var(--primary)]"
                   : "text-gray-600 hover:text-[var(--primary)]"

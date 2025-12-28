@@ -1,11 +1,12 @@
 import Image from "next/image";
 import { Star, BadgeCheck } from "lucide-react";
-import { ButtonAddToCart, ButtonBuyNow } from "../ui/buttons";
+import { ButtonAddToCart, ButtonAddToCart2, ButtonBuyNow, ButtonBuyNow2 } from "../ui/buttons";
 
 
 export default function ProductCard({ product}) {
   return (
-    <div className="bg-white border border-gray-300 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition">
+    <div>
+    <div className="bg-white border border-gray-300 rounded-sm overflow-hidden shadow-sm hover:shadow-md transition">
 
       {/* BEST SELLER */}
       
@@ -66,11 +67,12 @@ export default function ProductCard({ product}) {
           </span>
         </div>
       </div>
-      
       <div className="flex gap-2 m-1 mt-0">
         <ButtonAddToCart />
-        <ButtonBuyNow />
+        <ButtonBuyNow2 />
       </div>
+    </div>  
+      
     </div>
   );
 }
