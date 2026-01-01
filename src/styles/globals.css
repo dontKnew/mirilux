@@ -5,6 +5,8 @@
   --foreground: #171717;
   --primary:#f16504;
   --secondary:#0a356a;
+  --from-primary:#eb7a29;
+  --to-primary:#b84f04;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -14,19 +16,21 @@
   }
 }
 
+
 body {
   background: var(--background);
   color: var(--secondary);
   font-family: var(--font-roboto), system-ui, sans-serif;
-  font-weight:500;
+  font-weight:400;
   /* overflow-x: hidden; */
 }
 button {
   cursor: pointer;
 }
 
-h1, h2, h3, h4 {
-  color:var(--secondary)
+h1, h2, h3, h4, h5, h6 {
+  font-weight:500;
+   color:var(--secondary)
 }
 
 /* darker placeholder */
@@ -48,8 +52,8 @@ h1, h2, h3, h4 {
 .gray {
   @apply text-gray-500;
 }
-.border-color {
-  @apply text-gray-300
+.border-color, .border {
+  @apply border-gray-300
 }
 
 /* Swiper pagination dots - MiriLux style */
@@ -67,9 +71,6 @@ h1, h2, h3, h4 {
   background: var(--primary);
 }
 
-.swiper-initialized {
-  padding-bottom:45px !important;
-}
 
 @keyframes popup {
   0% {
@@ -84,4 +85,37 @@ h1, h2, h3, h4 {
 
 .animate-popup {
   animation: popup 0.4s ease-out forwards;
+}
+
+
+/* Hide scrollbar completely */
+.scrollbar-hide {
+  -ms-overflow-style: none; /* IE & Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
+}
+
+
+
+
+.ribbon {
+  font-size: 28px;
+  font-weight: bold;
+  color: #fff;
+}
+.ribbon {
+  --f: .5em; /* control the folded part*/
+  --r: .8em; /* control the ribbon shape */
+  
+  position: absolute;
+  left: 20px;
+  top: calc(-1*var(--f));
+  padding: .2em;
+  background: #BF4D28;
+  border-left: var(--f) solid #0005;
+  border-bottom: var(--r) solid #0000;
+  clip-path: polygon(var(--f) 0,100% 0,100% 100%,calc(50% + var(--f)/2) calc(100% - var(--r)), var(--f) 100%,var(--f) var(--f),0 var(--f));
 }

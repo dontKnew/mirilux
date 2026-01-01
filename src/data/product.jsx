@@ -1,7 +1,7 @@
 const Products = [
   {
     id: 1,
-    title: "Into the Waves Eau De Parfum For Men - 100 ml",
+    title: "Into the Waves For Men - 100 ml",
     description: "Premium & Long Lasting Fragrance",
     size: "100ml",
     rating: 5,
@@ -14,7 +14,7 @@ const Products = [
   },
   {
     id: 2,
-    title: "Into the Valley Eau De Parfum For Women - 100 ml",
+    title: "Into the Valley For Women - 100 ml",
     description: "Premium & Long Lasting Fragrance",
     size: "100ml",
     rating: 5,
@@ -27,7 +27,7 @@ const Products = [
   },
   {
     id: 3,
-    title: "Into the Sunset Eau De Parfum For Women - 100 ml",
+    title: "Into the Sunset For Women - 100 ml",
     description: "Premium & Long Lasting Fragrance",
     size: "100ml",
     rating: 5,
@@ -40,7 +40,7 @@ const Products = [
   },
   {
     id: 4,
-    title: "Vanilla Bliss Eau De Parfum For Women - 100 ml",
+    title: "Vanilla Bliss For Women - 100 ml",
     description: "Premium & Long Lasting Fragrance",
     size: "100ml",
     rating: 5,
@@ -55,7 +55,7 @@ const Products = [
   /* ➕ MORE PRODUCTS */
   {
     id: 5,
-    title: "Oud Royale Eau De Parfum in India - 100 ml",
+    title: "Oud Royale in India - 100 ml",
     description: "Luxury Oud Fragrance",
     size: "100ml",
     rating: 4.8,
@@ -68,7 +68,7 @@ const Products = [
   },
   {
     id: 6,
-    title: "Amber Nights Eau De Parfum - 100 ml",
+    title: "Amber Nights - 100 ml",
     description: "Warm & Sensual Notes",
     size: "100ml",
     rating: 4.9,
@@ -81,7 +81,7 @@ const Products = [
   },
   {
     id: 7,
-    title: "Fresh Citrus Bloom Eau De Parfum - 100 ml",
+    title: "Fresh Citrus Bloom - 100 ml",
     description: "Fresh Daily Wear",
     size: "100ml",
     rating: 4.7,
@@ -94,7 +94,7 @@ const Products = [
   },
   {
     id: 8,
-    title: "Midnight Musk Eau De Parfum - 100 ml",
+    title: "Midnight Musk - 100 ml",
     description: "Bold & Intense Fragrance",
     size: "100ml",
     rating: 4.9,

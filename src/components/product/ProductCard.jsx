@@ -6,11 +6,12 @@ import { ButtonAddToCart, ButtonAddToCart2, ButtonBuyNow, ButtonBuyNow2 } from "
 export default function ProductCard({ product}) {
   return (
     <div>
-    <div className="bg-white border border-gray-300 rounded-sm overflow-hidden shadow-sm hover:shadow-md transition">
+      
+    <div className="bg-white border border-color rounded-sm overflow-hidden shadow-sm hover:shadow-md transition">
 
       {/* BEST SELLER */}
       
-        <span className="absolute bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-br-lg">
+        <span className="absolute bg-[var(--primary)] text-white text-xs font-bold px-3 py-1 rounded-br-lg">
           {product.badge} 
         </span>
 
@@ -21,12 +22,12 @@ export default function ProductCard({ product}) {
           alt={product.title}
           width={160}
           height={200}
-          className="object-contain"
+          className="object-contain hover:scale-120 active:scale-120 transition-transform duration-200 cursor-pointer"
         />
       </div>
 
       {/* Content */}
-      <div className="px-4 pb-4 text-center">
+      <div className="md:px-4 px-2 pb-4 text-center">
         <h3 className="font-semibold text-sm leading-snug">
           {product.title}
         </h3>
@@ -35,7 +36,7 @@ export default function ProductCard({ product}) {
           {product.description}
         </p>
 
-        <p className="text-sm mt-1">{product.size}</p>
+        {/* <p className="text-sm mt-1">{product.size}</p> */}
 
         {/* Rating & Reviews */}
           <div className="flex items-center justify-center gap-2 mt-2 text-sm">

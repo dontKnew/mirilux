@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { X, Sparkles } from "lucide-react";
+import BrandName from "./ui/BrandName";
 
 const MAX_SHOWS = 2;
 const BLOCK_TIME = 60 * 60 * 1000; // 1 hour in ms
@@ -44,7 +45,7 @@ export default function PopupOffer() {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm"
+      className="fixed inset-0 z-100 flex items-center justify-center bg-black/40 backdrop-blur-sm"
       onClick={() => setOpen(false)}
     >
       {/* Popup Card */}
@@ -69,7 +70,7 @@ export default function PopupOffer() {
 
         {/* Content */}
         <h3 className="text-xl font-bold mb-2">
-          Welcome to MiriLux ✨
+          Welcome to <BrandName /> ✨
         </h3>
 
         <p className="text-sm text-gray-600 mb-5">

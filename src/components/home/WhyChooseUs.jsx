@@ -6,27 +6,15 @@ import {
   Gift,
   Truck,
 } from "lucide-react";
+import BrandName from "../ui/BrandName";
+import Container from "../layout/Container";
+import Title from "../ui/Title";
 
 export default function WhyChooseUs() {
   return (
-    <section className="bg-white py-10">
-      <div className="md:max-w-7xl mx-auto px-4">
-
-        {/* Heading */}
-        <div className="mb-12">
-          <h2 className="flex items-center gap-2 text-2xl font-bold">
-            <span className="h-10 w-1.5 bg-[var(--primary)] rounded"></span>
-            Why Choose MiriLux
-          </h2>
-          <p className="mt-3 text-gray-600">
-            Discover what makes MiriLux a trusted choice for premium,
-            long-lasting fragrances loved by customers across India.
-          </p>
-        </div>
-
-        {/* Features Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-
+    <Container>
+        <Title title="Why Choose MiriLux" description="Discover what makes MiriLux a trusted choice for premium, long-lasting fragrances loved by customers across India." />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 md:gap-8 gap-4">
           <Feature
             icon={<Sparkles />}
             title="Luxury Fragrances"
@@ -64,8 +52,7 @@ export default function WhyChooseUs() {
           />
 
         </div>
-      </div>
-    </section>
+    </Container>
   );
 }
 
@@ -73,13 +60,11 @@ export default function WhyChooseUs() {
 
 function Feature({ icon, title, desc }) {
   return (
-    <div className="bg-[#fafafa] border border-gray-200 rounded-xl p-6 hover:shadow-md transition">
-
+    <div className="bg-[#fafafa] border border-gray-200 rounded-xl md:p-6 p-3 hover:shadow-md transition">
       <div className="flex items-center gap-3 mb-4">
         <div className="h-12 w-12 rounded-full bg-[var(--primary)]/10 flex items-center justify-center  text-[var(--primary)]">
             {icon}
         </div>
-
         <h3 className="font-semibold text-base">
             {title}
         </h3>

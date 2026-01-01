@@ -3,16 +3,10 @@ import { MessageCircle, Phone, ShieldCheck } from "lucide-react";
 
 export default function ShippingSupport() {
   return (
-    <section className="bg-white mt-10">
-      <div className="md:max-w-7xl mx-auto  ">
-
-        {/* MAIN GRID */}
-        <div className="flex md:flex-row   flex-col md:justify-between gap-4 items-center">
-
-          {/* LEFT: FEATURES (TAKES MORE SPACE) */}
+    <section className="bg-white my-4">
+      <div className="md:max-w-7xl mx-auto ">
+        <div className="flex md:flex-row flex-col md:justify-between gap-4 items-center md:pb-0 pb-8">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:gap-20">
-
-            {/* Free Shipping */}
             <Feature
               image="/images/free-shipping.png"
               title="Free Shipping"
@@ -44,7 +38,7 @@ export default function ShippingSupport() {
               <a
                 href="https://wa.me/919876543210"
                 target="_blank"
-                className="flex items-center gap-2 px-5 py-2.5 rounded-md
+                className="flex w-[150px] items-center gap-2 px-5 py-2.5 rounded-md
                            bg-green-500 text-white font-medium
                            hover:bg-green-600 transition"
               >
@@ -54,9 +48,9 @@ export default function ShippingSupport() {
 
               <a
                 href="tel:+919876543210"
-                className="flex items-center gap-2 px-5 py-2.5 rounded-md
-                           border-2 border-orange-500 text-orange-600
-                           hover:bg-orange-500 hover:text-white transition"
+                className="w-[150px] justify-center flex items-center gap-2 px-5 py-2.5 rounded-md
+                           border-2 border-[var(--primary)] text-orange-600
+                           hover:bg-[var(--primary)] hover:text-white transition"
               >
                 <Phone size={18} />
                 Call Us

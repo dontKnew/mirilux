@@ -8,53 +8,39 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 
 import "swiper/css";
 import { Products } from "@/data/product";
+import Title from "../ui/Title";
+import Container from "../layout/Container";
 
 export default function ProductSection({ title = "Best Sellers", reverse = false }) {
   const swiperRef = useRef(null);
 
   return (
-    <section className="md:max-w-7xl mx-auto px-4 py-10 relative">
+    <Container>
+    <div className="relative">
+      <div className="flex md:flex-row flex-col md:justify-between md:items-center">
+        <Title title={title} description="Explore best-selling safe, natural, and 100% toxin-free baby and beauty products." />
+        <div className="flex justify-end gap-3 md:mb-0 mb-4">
+          <button
+            onClick={() => swiperRef.current?.slidePrev()}
+            className=" group h-11 w-11 rounded-full bg-[var(--primary)] border-2 border-[var(--primary)] flex items-center justify-center shadow-sm hover:bg-white hover:scale-105 transition-all duration-200"
+          >
+            <ChevronLeft
+              size={22}
+              className=" text-white group-hover:text-[var(--primary)] transition-colors duration-200"
+            />
+          </button>
 
-      {/* HEADER */}
-      <div className="md:flex justify-between items-start mb-6">
-        <div>
-          <h2 className="flex items-center gap-2 text-2xl font-bold">
-            <span className="h-10 w-1.5 bg-[var(--primary)] rounded"></span>
-            {title}
-          </h2>
-
-          <p className="mt-2 text-gray-600">
-            Explore best-selling safe, natural, and 100% toxin-free baby and beauty products.
-          </p>
-        </div>
-
-        {/* CUSTOM ARROWS (TOP RIGHT) */}
-        <div className="flex justify-end gap-3 z-20">
-        <button
-          onClick={() => swiperRef.current?.slidePrev()}
-          className="group hover:scale-105 h-11 w-11 rounded-full bg-white border-2 border-[var(--primary)] flex items-center justify-center shadow-sm hover:bg-[var(--primary)] transition-colors duration-200"
-        >
-          <ChevronLeft
-            size={22}
-            className="text-[var(--primary)] group-hover:text-white transition-colors duration-200"
-          />
-        </button>
-
-        <button
-          onClick={() => swiperRef.current?.slideNext()}
-          className="group hover:scale-105 h-11 w-11 rounded-full bg-white border-2 border-[var(--secondary)] flex items-center justify-center shadow-sm hover:bg-[var(--secondary)] transition-colors duration-200"
-        >
-          <ChevronRight
-            size={22}
-            className="text-[var(--secondary)] group-hover:text-white transition-colors duration-200"
-          />
-        </button>
-
-
+          <button
+            onClick={() => swiperRef.current?.slideNext()}
+            className=" group h-11 w-11 rounded-full bg-[var(--secondary)] border-2 border-[var(--secondary)] flex items-center justify-center shadow-sm hover:bg-white hover:scale-105 transition-all duration-200"
+          >
+            <ChevronRight
+              size={22}
+              className=" text-white group-hover:text-[var(--secondary)] transition-colors duration-200"
+            />
+          </button>
         </div>
       </div>
-
-      {/* SLIDER */}
       <Swiper
         modules={[Autoplay]}
         onSwiper={(swiper) => (swiperRef.current = swiper)}
@@ -63,13 +49,13 @@ export default function ProductSection({ title = "Best Sellers", reverse = false
           delay: 1000,
           disableOnInteraction: true,
           pauseOnMouseEnter: true,
-          reverseDirection: reverse, // 🔥 magic
+          reverseDirection: reverse, 
         }}
         speed={800}
         spaceBetween={24}
         breakpoints={{
           0: { slidesPerView: 1 },
-          640: { slidesPerView: 2 },
+          640: { slidesPerView: 2.2 },
           768: { slidesPerView: 3 },
           1024: { slidesPerView: 4 },
         }}
@@ -80,6 +66,7 @@ export default function ProductSection({ title = "Best Sellers", reverse = false
           </SwiperSlide>
         ))}
       </Swiper>
-    </section>
+    </div>
+    </Container>
   );
 }

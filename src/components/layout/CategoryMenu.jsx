@@ -1,82 +1,101 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useRouter, usePathname } from "next/navigation";
+
 const categories = [
-  "HOME",
-  "MEN",
-  "WOMEN",
-  "UNISEX",
-  "OUD",
-  "FLORAL",
-  "WOODY",
-  "FRESH",
-  "GIFTS",
-  "NEW",
-  "BEST SELLERS",
-  "LUXURY",
-  "ALL"
+  "HOME", "MEN", "WOMEN", "UNISEX", "OUD", "FLORAL", "WOODY",
+  "FRESH", "GIFTS", "NEW", "BEST SELLERS", "LUXURY", "ALL"
 ];
 
-
 export default function CategoryMenu() {
-  const [active, setActive] = useState("HOME");
+  const router = useRouter();
+  const pathname = usePathname();
+
   const containerRef = useRef(null);
   const itemRefs = useRef({});
+  const sliderRef = useRef(null);
 
-  const [lineStyle, setLineStyle] = useState({
-    width: 0,
-    left: 0,
-  });
+  const [active, setActive] = useState("");
 
-  // 🔥 Update underline position
+  /* 🔹 URL se active category sync */
+  useEffect(() => {
+    const slug = pathname.split("/").pop()?.toUpperCase();
+    if (slug && categories.includes(slug)) {
+      setActive(slug);
+    } else {
+      setActive("HOME");
+    }
+  }, [pathname]);
+
+  /* 🔹 Move slider */
+  const moveSlider = (cat) => {
+    const el = itemRefs.current[cat];
+    const slider = sliderRef.current;
+    if (!el || !slider) return;
+
+    slider.style.width = `${el.offsetWidth}px`;
+    slider.style.left = `${el.offsetLeft}px`;
+  };
+
+  /* 🔹 Active item scroll + slider sync */
   useEffect(() => {
     const activeEl = itemRefs.current[active];
-    if (activeEl && containerRef.current) {
-      const { offsetLeft, offsetWidth } = activeEl;
-      setLineStyle({
-        width: offsetWidth,
-        left: offsetLeft,
-      });
+    if (!activeEl) return;
 
-      // auto scroll into view (mobile UX)
-      activeEl.scrollIntoView({
-        behavior: "smooth",
-        inline: "center",
-        block: "nearest",
-      });
-    }
+    activeEl.scrollIntoView({
+      behavior: "smooth",
+      inline: "center",
+      block: "nearest",
+    });
+
+    moveSlider(active);
   }, [active]);
 
+  const handleClick = (cat) => {
+    setActive(cat);
+
+    if (cat === "HOME") {
+      router.push("/");
+    } else {
+      router.push(`/category/${cat.toLowerCase()}`);
+    }
+  };
+
   return (
-    <div className="border-b border-gray-300 shadow-xl/30 shadow-white">
-      <div className="md:max-w-7xl mx-auto px-4">
+    <div className="bg-white/90 backdrop-blur border-y border-color shadow-md">
+      <div className="max-w-7xl mx-auto px-4">
         <div
           ref={containerRef}
-          className="relative flex gap-6 overflow-x-auto scrollbar-hide justify-between"
+          className="relative flex gap-2 md:justify-between justify-start overflow-x-auto scrollbar-hide"
         >
-          {categories.map((cat) => (
-            <button
-              key={cat}
-              ref={(el) => (itemRefs.current[cat] = el)}
-              onClick={() => setActive(cat)}
-              className={`py-3  whitespace-nowrap  transition-colors cursor-pointer ${
-                active === cat
-                  ? "text-[var(--primary)]"
-                  : "text-gray-600 hover:text-[var(--primary)]"
-              }`}
-            >
-              {cat}
-            </button>
-          ))}
-
-          {/* 🔵 Sliding underline */}
           <span
-            className="absolute bottom-0 h-[2px] bg-[var(--primary)] transition-all duration-300 ease-out"
-            style={{
-              width: `${lineStyle.width}px`,
-              left: `${lineStyle.left}px`,
-            }}
+            ref={sliderRef}
+            className="absolute top-1/2 -translate-y-1/2 h-9 rounded bg-[var(--primary)]/10 transition-all duration-300 ease-out pointer-events-none"
           />
+
+          {categories.map((cat) => {
+            const isActive = active === cat;
+
+            return (
+              <button
+                type="button" // ✅ VERY IMPORTANT
+                key={cat}
+                ref={(el) => (itemRefs.current[cat] = el)}
+                onClick={() => handleClick(cat)}
+                onMouseEnter={() => moveSlider(cat)}
+                className={`relative z-10 md:px-4 px-2 py-2 md:text-base text-sm whitespace-nowrap font-[500] transition-colors duration-200 rounded
+                  ${
+                    isActive
+                      ? "text-[var(--primary)]"
+                      : "text-[var(--secondary)] hover:text-[var(--primary)]"
+                  }
+                `}
+              >
+                {cat}
+              </button>
+            );
+          })}
         </div>
       </div>
     </div>

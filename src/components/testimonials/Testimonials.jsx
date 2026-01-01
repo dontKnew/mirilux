@@ -8,25 +8,14 @@ import { Autoplay, Pagination } from "swiper/modules";
 
 import "swiper/css";
 import "swiper/css/pagination";
+import Container from "../layout/Container";
+import Title from "../ui/Title";
 
 export default function Testimonials() {
   return (
-    <section className="bg-[#fafafa] pt-14 pb-8">
+    <Container>
       <div className="md:max-w-7xl mx-auto px-4">
-
-        {/* Heading */}
-        <div className="mb-10">
-          <h2 className="flex items-center gap-2 text-2xl font-bold">
-            <span className="h-10 w-1.5 bg-[var(--primary)] rounded"></span>
-            What Our Customers Say
-          </h2>
-          <p className="mt-2 text-gray-600">
-            Trusted by thousands of customers across India for premium,
-            long-lasting fragrances.
-          </p>
-        </div>
-
-        {/* Swiper */}
+        <Title title="What Our Customers Say" description="Trusted by thousands of customers across India for premium, long-lasting fragrances." />
         <Swiper
           modules={[Autoplay, Pagination]}
           autoplay={{
@@ -53,6 +42,6 @@ export default function Testimonials() {
           ))}
         </Swiper>
       </div>
-    </section>
+    </Container>
   );
 }

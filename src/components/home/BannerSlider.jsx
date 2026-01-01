@@ -49,7 +49,7 @@ export default function BannerSlider() {
       {/* Left Arrow */}
       <button
         onClick={prev}
-        className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white shadow-md p-2 rounded-full"
+        className="md:block hidden absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white shadow-md p-2 rounded-full"
       >
         <ChevronLeft size={24} />
       </button>
@@ -57,7 +57,7 @@ export default function BannerSlider() {
       {/* Right Arrow */}
       <button
         onClick={next}
-        className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white shadow-md p-2 rounded-full"
+        className="md:block hidden absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white shadow-md p-2 rounded-full"
       >
         <ChevronRight size={24} />
       </button>

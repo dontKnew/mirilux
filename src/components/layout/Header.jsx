@@ -1,8 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ShoppingCart, Search, HelpCircle, Truck, BookOpen } from "lucide-react";
+import { Store, ShoppingCart, Search, HelpCircle, Truck, BookOpen } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
+import { useCart } from "@/context/CartContext";
+
 
 const PLACEHOLDERS = [
   "Search for Women Perfume",
@@ -16,6 +19,8 @@ export default function Header() {
   const [wordIndex, setWordIndex] = useState(0);
   const [charIndex, setCharIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
+  const { setIsOpen } = useCart();
+
 
   useEffect(() => {
     const currentWord = PLACEHOLDERS[wordIndex];
@@ -42,14 +47,25 @@ export default function Header() {
   }, [charIndex, isDeleting, wordIndex]);
 
   return (
-    <div className="border-b bg-white border-gray-300">
-      <div className="md:max-w-7xl mx-auto md:px-4 px-0 flex md:flex-row flex-col items-center justify-between md:gap-5 gap-0">
+    <div className="bg-white">
+      <div className="mx-2 md:mx-auto relative md:top-0 h-[100px] md:h-fit -top-[15px]  md:max-w-7xl md:px-4 px-0 flex md:flex-row flex-col md:items-center items-start justify-between md:gap-5 gap-0">
 
         {/* Logo */}
-        <Image src="/logo.png" alt="Logo" width={180} height={40} priority />
+        <div>
+          <Link href="/">
+            <Image className="relative md:top-0 top-[17px] md:w-[180px] w-[160px]" src="/logo.png" alt="Logo" width={180} height={40} priority />
+          </Link>
+          <div className="md:hidden block w-fit absolute top-[32px] right-[11px]">
+              <div className="flex gap-4">
+                  <Link href="/shop"><Icon Icon={Store} /></Link>
+                  <div onClick={() => setIsOpen(true)}><Icon Icon={ShoppingCart} count={3} /></div>
+              </div>
+          </div>
+        </div>
+
 
         {/* Search */}
-        <div className="flex flex-1 justify-center md:mb-0 mb-5">
+        <div className="flex flex-1 w-full justify-center md:mb-0 mb-1">
           <div className="relative w-full max-w-lg">
             <Search
               size={18}
@@ -59,25 +75,25 @@ export default function Header() {
             <input
               type="search"
               placeholder={placeholder}
-              className="w-full border rounded-md pl-10 md:pr-24 pr-10 py-2 outline-none border-gray-300"
+              className="w-full border rounded-md pl-10 md:pr-24 pr-10 py-2  placeholder:text-sm md:placeholder:text-md  outline-none border-gray-300"
             />
 
             <button
-                className="absolute right-0 top-0 h-full px-4 bg-[var(--primary)] hover:bg-[var(--secondary)] text-white rounded-r-md flex items-center gap-2 transition-colors"
-              >
-                <Search size={18} />
-                <span className="hidden sm:inline">Search</span>
-              </button>
+              className="absolute right-0 top-0 h-full px-4 bg-gradient-to-r from-[var(--from-primary)] to-[var(--to-primary)] hover:from-green-600 hover:to-green-700 text-white rounded-r-md flex items-center gap-2 transition-colors"
+            >
+              <Search size={18} />
+              <span className="hidden sm:inline">Search</span>
+            </button>
 
           </div>
         </div>
 
         {/* Icons */}
-        <div className="md:flex hidden items-center gap-10">
-          <Icon label="Cart" Icon={ShoppingCart} count={3} />
-          <Icon label="Book" Icon={BookOpen} />
-          <Icon label="Track" Icon={Truck} />
-          <Icon label="Help" Icon={HelpCircle} />
+        <div className="hidden md:flex items-center gap-8">
+          <Link href="/shop"><Icon label="Shop" Icon={Store} /></Link>
+          <div onClick={() => setIsOpen(true)} ><Icon label="Cart" Icon={ShoppingCart} count={3} /> </div>
+          <Link href="/track-order"><Icon label="Track" Icon={Truck} /></Link>
+          <Link href="/help"><Icon label="Help" Icon={HelpCircle} /></Link>
         </div>
 
       </div>
@@ -86,14 +102,29 @@ export default function Header() {
 }
 function Icon({ Icon, label, count }) {
   return (
-    <button className="relative flex flex-col items-center text-[var(--secondary)] hover:text-[var(--primary)] transition">
-      {count > 0 && (
-        <span className="absolute -top-1 -right-2 bg-[var(--primary)] text-white text-xs h-5 min-w-[20px] px-1 flex items-center justify-center rounded-full">
-          {count}
-        </span>
-      )}
-      <Icon size={28} />
-      <span className="text-sm">{label}</span>
+    <button
+      className="relative active:scale-95 flex flex-col items-center gap-1 text-[var(--secondary)] hover:text-[var(--primary)] transition group"
+    >
+      {/* ICON WRAPPER */}
+      <div className="relative">
+        <Icon
+          size={28}
+          strokeWidth={1.5}   // 👈 yahin magic hai
+          className="group-hover:scale-105 transition-transform"
+        />
+
+        {/* CART BADGE */}
+        {count > 0 && (
+          <span
+            className="absolute -top-2 -right-2 bg-[var(--primary)] text-white text-[10px] font-semibold h-5 min-w-[20px] px-1 flex items-center justify-center rounded-full shadow"
+          >
+            {count}
+          </span>
+        )}
+      </div>
+
+      {/* LABEL */}
+      <span className="text-sm font-medium">{label}</span>
     </button>
   );
 }
