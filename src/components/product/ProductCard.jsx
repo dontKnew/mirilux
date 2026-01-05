@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { Star, BadgeCheck } from "lucide-react";
-import { ButtonAddToCart, ButtonAddToCart2, ButtonBuyNow, ButtonBuyNow2 } from "../ui/buttons";
+import ProductCardButtons from "./ProductCardButtons";
 
 
 export default function ProductCard({ product}) {
@@ -18,7 +18,7 @@ export default function ProductCard({ product}) {
       {/* Image */}
       <div className="relative h-50 flex items-center justify-center">
         <Image
-          src={product.image}
+          src={`/images/products/${product.image}`}
           alt={product.title}
           width={160}
           height={200}
@@ -68,10 +68,7 @@ export default function ProductCard({ product}) {
           </span>
         </div>
       </div>
-      <div className="flex gap-2 m-1 mt-0">
-        <ButtonAddToCart />
-        <ButtonBuyNow2 />
-      </div>
+      <ProductCardButtons productId={product.id} />
     </div>  
       
     </div>

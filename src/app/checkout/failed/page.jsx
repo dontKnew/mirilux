@@ -6,13 +6,13 @@ import { XCircle } from "lucide-react";
 
 export default function PaymentFailedPage() {
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+    <div className="bg-gray-50 flex items-center justify-center md:px-4 px-0 py-3">
       
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.4 }}
-        className="bg-white max-w-md w-full rounded-2xl shadow-lg p-8 text-center"
+        className="bg-white max-w-md w-full rounded-2xl shadow-lg md:p-8 p-2 text-center"
       >
         {/* Failed Icon */}
         <motion.div

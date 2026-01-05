@@ -3,7 +3,8 @@
 import { Tag, Loader2, X } from "lucide-react";
 import { motion } from "framer-motion";
 import { useRef, useState } from "react";
-import { useToast } from "../ui/toast/ToastProvider";
+import { useToast } from "../../ui/toast/ToastProvider";
+import { useCart } from "@/lib/useCart";
 
 export default function CartCoupon() {
   const [code, setCode] = useState("");
@@ -11,6 +12,8 @@ export default function CartCoupon() {
 
   const inputRef = useRef(null);
   const { showToast } = useToast();
+  const hasItems = useCart((s) => s.hasItems());
+  if(!hasItems) return ;
 
   const applyCoupon = () => {
     if (!code || status === "success") return;

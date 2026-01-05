@@ -1,12 +1,17 @@
 import CheckoutStepper from "@/components/checkout/CheckoutStepper";
+import Container from "@/components/layout/Container";
+import CheckoutHeader from "./checkoutHeader";
 
 export default function CheckoutLayout({ children }) {
   return (
-    <div className="min-h-screen bg-gray-50">
-      <CheckoutStepper />
-      <main className="max-w-6xl mx-auto px-4 py-6">
-        {children}
-      </main>
-    </div>
+    <>
+    <Container py={5}>
+      <CheckoutHeader />
+        <main className="md:mb-0 mb-[74px] bg-white md:bg-gray-100 md:p-2">
+          <CheckoutStepper />
+          {children}
+        </main>
+    </Container>
+    </>
   );
 }

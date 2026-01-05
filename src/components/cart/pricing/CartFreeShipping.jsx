@@ -1,8 +1,11 @@
+import { useCart } from "@/lib/useCart";
 import { Truck } from "lucide-react";
 
 export default function CartFreeShipping({ total = 485 }) {
   const FREE_LIMIT = 399;
   const percent = Math.min((total / FREE_LIMIT) * 100, 100);
+  const hasItems = useCart((s) => s.hasItems());
+  if(!hasItems) return ;
 
   return (
     <div className="bg-green-50 border border-green-200 rounded-lg p-3">

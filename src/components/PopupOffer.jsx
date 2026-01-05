@@ -41,6 +41,23 @@ export default function PopupOffer() {
     }
   }, []);
 
+  useEffect(() => {
+    const handleEsc = (e) => {
+      if (e.key === "Escape") {
+        setOpen(false);
+      }
+    };
+
+    if (open) {
+      window.addEventListener("keydown", handleEsc);
+    }
+
+    return () => {
+      window.removeEventListener("keydown", handleEsc);
+    };
+  }, [open]);
+
+
   if (!open) return null;
 
   return (

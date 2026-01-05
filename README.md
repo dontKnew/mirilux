@@ -1,36 +1,84 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+********************** PRODUCT PRICE STRUCTURE  **********************
+1. Product Base Price = 200 
+2. Discount 20% : only for UI only, do not show in tax invoice etc. everywhere....
 
-## Getting Started
 
-First, run the development server:
+--- Internal System --- 
+Base price              = 200 (Input By Admin)
+GST @18%                = 36
+-----------------------------
+Product price (GST)     = 236 
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+==== Below Calculate on Product Price On Checkout Time===
+Coupon 0%               = 0
+Shipping                = + 0
+------------------------------
+Final Payable           = 236
+[New Price] = 236 rs. 
+[Old Price] = 236 + 10% Discount = 259.6 rs. - Strike Price : UI Displaying only...
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+--- USER DISPLAYED ---
+Price Details
+--------------------------------
+Product Price        ₹259.60
+Discount             -₹23.60
+--------------------------------
+Subtotal             ₹236.00
+Coupon               -₹0
+Shipping             ₹0
+--------------------------------
+Amount Payable       ₹236.00
+(Inclusive of GST)
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+********************** END PRODUCT STRUCUTRE **********************
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Site Pending Work 
+1. Order Book System
+2. Track System
+3. User Panel:Like Amzone/Flipkart
+    - Login Page
+        - Login with Registered Gmail
+        - Email Login With OTP 
+        - Mobile Number Login With OTP 
+        - Email/Mobile Login with Password 
+        - Forget Password by Email/Mobile Number  
+    - Order List
+    - Profile
+    - Logout
+    - Change Password
+    - Two Factor Authentication : Applicable only with Password Login -- Email, Phone Number
+4. View Product 
+    - Popup : details all 
+    - Product Page : for seo
+    - Multi Product Images
 
-## Learn More
+-- Pages --
+2. About Page 
+3. Careers 
+4. Blogs
+5. Contact us
 
-To learn more about Next.js, take a look at the following resources:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Admin Panel
+1. Dashboard : Total Order, Total Cancelled Orders Total New Order, Total Delivered Order, Total Pending Order. Total Return Order, Total Users, Total New Users, Total Income, Total Pending Incomes
+2. Orders
+    - Delivered Orders
+    - New Orders : which yet not seen yet
+    - Pending Orders
+    - Cancelled Orders
+3. User List
+    - New Users
+    - Active Users
+    - InActive Users
+4. Enquiry Form
+    - Contact Form
+    - Career Form
+5. Admin List
+6. My Profile
+7. Change Password
+8. Logout
+9. Login Page
+    - Username With Password Login
+    - Two Factor Authentication : Applicable only with Password Login -- Email, Phone Number
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.

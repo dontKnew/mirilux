@@ -4,16 +4,17 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useCart } from "@/context/CartContext";
 import { useEffect } from "react";
 
-import CartHeader from "./CartHeader";
-import CartItems from "./CartItems";
-import CartSuggestions from "./CartSuggestions";
-import CartFooter from "./CartFooter";
-import CartCoupon from "./CartCoupon";
-import CartFreeShipping from "./CartFreeShipping";
-import CartAddress from "./CartAddress";
+import CartHeader from "./layout/CartHeader";
+import CartItems from "./items/CartItems";
+import CartSuggestions from "./items/CartSuggestions";
+import CartFooter from "./layout/CartFooter";
+import CartCoupon from "./pricing/CartCoupon";
+import CartFreeShipping from "./pricing/CartFreeShipping";
+import CartAddress from "./input/CartAddress";
 
 export default function CartSidebar() {
   const { isOpen, setIsOpen } = useCart();
+  const hasItems = useCart((s) => s.hasItems());
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
@@ -27,7 +28,6 @@ export default function CartSidebar() {
 
   useEffect(() => {
     if (!isOpen) return;
-
     const handleKeyDown = (e) => {
       if (e.key === "Escape") {
         setIsOpen(false);
@@ -38,6 +38,10 @@ export default function CartSidebar() {
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [isOpen, setIsOpen]);
+
+  // useEffect(()=>{
+  //   // setIsOpen(true)
+  // }, [])
 
   return (
     <AnimatePresence>

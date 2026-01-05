@@ -1,18 +1,18 @@
 "use client";
-
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { CheckCircle } from "lucide-react";
+import BrandName from "@/components/ui/BrandName";
 
 export default function CheckoutSuccessPage() {
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+    <div className="bg-gray-50 flex items-center justify-center md:px-4 px-0 py-3">
       
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5 }}
-        className="bg-white max-w-md w-full rounded-2xl shadow-lg p-8 text-center"
+        className="bg-white max-w-md w-full rounded-2xl shadow-lg md:p-8 p-2 text-center"
       >
         {/* Success Icon */}
         <motion.div
@@ -41,7 +41,7 @@ export default function CheckoutSuccessPage() {
           transition={{ delay: 0.6 }}
           className="text-sm text-gray-600 mt-2"
         >
-          Thank you for shopping with <span className="font-medium">MiriLux</span>
+          Thank you for shopping with <span className="font-medium"><BrandName /></span>
         </motion.p>
 
         {/* Order Info */}
@@ -79,7 +79,7 @@ export default function CheckoutSuccessPage() {
           className="mt-6 space-y-3"
         >
           <Link
-            href="/orders"
+            href="/track-order"
             className="block w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-lg font-semibold"
           >
             Track Order

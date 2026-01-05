@@ -1,14 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { User, Phone, MapPin, Home } from "lucide-react";
-import Link from "next/link";
-import OrderSummary from "@/components/checkout/OrderSummary";
+import { User, Phone, MapPin, Home, EqualApproximatelyIcon } from "lucide-react";
 import FloatingInput from "@/components/ui/FloatingInput";
+import { useCart } from "@/lib/useCart";
 
 export default function AddressPage() {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
+  const hasItems = useCart((s) => s.hasItems());
+  if(!hasItems) return ;
+  
 
   return (      
       <div>
@@ -36,23 +38,28 @@ export default function AddressPage() {
             }
           />
         </div>
+        <div className="grid md:grid-cols-2 grid-cols-1 gap-4 mb-4">
+          
+            <FloatingInput
+              label="Email"
+              icon={EqualApproximatelyIcon}
+              value=""
+              onChange={() => {}}
+            />
+            <FloatingInput
+              label="Pincode"
+              icon={MapPin}
+              value=""
+              onChange={() => {}}
+            />
 
-        <div className="grid gap-4">
-
-          <FloatingInput
-            label="Pincode"
-            icon={MapPin}
-            value=""
-            onChange={() => {}}
-          />
-
-          <FloatingInput
+        </div>
+        <FloatingInput
             label="Full Address"
             icon={Home}
             value=""
             onChange={() => {}}
           />
-        </div>
       </div>
     
   );

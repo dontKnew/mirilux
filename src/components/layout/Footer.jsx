@@ -8,9 +8,10 @@ import {
   MapPin,
   ShieldCheck,
   Youtube,
-  RefreshCcw, Truck
+  RefreshCcw, Truck,
 } from "lucide-react";
 import BrandName from "../ui/BrandName";
+import Link from "next/link";
 
 export default function Footer() {
   return (
@@ -69,21 +70,21 @@ export default function Footer() {
           {/* COMPANY */}
           <div>
             <FooterTitle title="Company" />
-            <FooterLink text="About Us" />
-            <FooterLink text="Our Story" />
-            <FooterLink text="Careers" />
-            <FooterLink text="Blogs" />
-            <FooterLink text="Contact Us" />
+            <FooterLink link="/about" text="About Us" />
+            <FooterLink link="/our-story" text="Our Story" />
+            <FooterLink link="/careers" text="Careers" />
+            <FooterLink link="/blogs" text="Blogs" />
+            <FooterLink link="/contact-us" text="Contact Us" />
           </div>
 
           {/* SUPPORT */}
           <div>
-            <FooterTitle title="Support" />
-            <FooterLink text="Track Order" />
-            <FooterLink text="Return Policy" />
-            <FooterLink text="Shipping Policy" />
-            <FooterLink text="Privacy Policy" />
-            <FooterLink text="Terms & Conditions" />
+            <FooterTitle link="/support" title="Support" />
+            <FooterLink link="/track-order" text="Track Order" />
+            <FooterLink link="/cancellation-policy" text="Return Policy" />
+            <FooterLink link="/shipping-policy" text="Shipping Policy" />
+            <FooterLink link="/privacy-policy" text="Privacy Policy" />
+            <FooterLink link="/terms-and-conditions" text="Terms & Conditions" />
           </div>
         </div>
 
@@ -152,11 +153,12 @@ function FooterTitle({ title }) {
   );
 }
 
-function FooterLink({ text }) {
+function FooterLink({ text, link="/" }) {
   return (
-    <p className=" text-gray-600 hover:text-[var(--primary)] cursor-pointer mb-3 transition-colors">
-      {text}
-    </p>
+    <Link href={link} >
+      <p className="text-gray-600 hover:text-[var(--primary)] cursor-pointer mb-3 transition-colors">{text}</p>
+      
+    </Link>
   );
 }
 

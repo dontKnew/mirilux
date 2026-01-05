@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 import { Store, ShoppingCart, Search, HelpCircle, Truck, BookOpen } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useCart } from "@/context/CartContext";
-
+import { useCart as useCartContext } from "@/context/CartContext";
+import { useCart } from "@/lib/useCart";
 
 const PLACEHOLDERS = [
   "Search for Women Perfume",
@@ -19,7 +19,8 @@ export default function Header() {
   const [wordIndex, setWordIndex] = useState(0);
   const [charIndex, setCharIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
-  const { setIsOpen } = useCart();
+  const { setIsOpen } = useCartContext();
+  const totalCartitems = useCart((s) => s.getTotalItems());
 
 
   useEffect(() => {
@@ -58,7 +59,7 @@ export default function Header() {
           <div className="md:hidden block w-fit absolute top-[32px] right-[11px]">
               <div className="flex gap-4">
                   <Link href="/shop"><Icon Icon={Store} /></Link>
-                  <div onClick={() => setIsOpen(true)}><Icon Icon={ShoppingCart} count={3} /></div>
+                  <div onClick={() => setIsOpen(true)}><Icon Icon={ShoppingCart} count={totalCartitems} /></div>
               </div>
           </div>
         </div>
@@ -91,7 +92,7 @@ export default function Header() {
         {/* Icons */}
         <div className="hidden md:flex items-center gap-8">
           <Link href="/shop"><Icon label="Shop" Icon={Store} /></Link>
-          <div onClick={() => setIsOpen(true)} ><Icon label="Cart" Icon={ShoppingCart} count={3} /> </div>
+          <div onClick={() => setIsOpen(true)} ><Icon label="Cart" Icon={ShoppingCart} count={totalCartitems} /> </div>
           <Link href="/track-order"><Icon label="Track" Icon={Truck} /></Link>
           <Link href="/help"><Icon label="Help" Icon={HelpCircle} /></Link>
         </div>
@@ -115,9 +116,9 @@ function Icon({ Icon, label, count }) {
 
         {/* CART BADGE */}
         {count > 0 && (
-          <span
-            className="absolute -top-2 -right-2 bg-[var(--primary)] text-white text-[10px] font-semibold h-5 min-w-[20px] px-1 flex items-center justify-center rounded-full shadow"
-          >
+          <span 
+            className={`absolute -top-2 -right-2 bg-[var(--primary)] text-white text-[10px] font-semibold h-5 min-w-[20px] px-1 flex items-center justify-center rounded-full shadow`} 
+            >
             {count}
           </span>
         )}
