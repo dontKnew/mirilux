@@ -1,11 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Store, ShoppingCart, Search, HelpCircle, Truck, BookOpen } from "lucide-react";
+import { Store, ShoppingCart, Search, HelpCircle, Truck, BookOpen, LogOutIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useCart as useCartContext } from "@/context/CartContext";
 import { useCart } from "@/lib/useCart";
+import Icon from "../ui/Icon";
+import Logo from "../ui/Logo";
+import { useGlobalState } from "@/lib/useGlobalState";
+import AuthClientService from "@/services/AuthClientService";
+import { useToast } from "../ui/toast/ToastProvider";
 
 const PLACEHOLDERS = [
   "Search for Women Perfume",
@@ -21,7 +26,17 @@ export default function Header() {
   const [isDeleting, setIsDeleting] = useState(false);
   const { setIsOpen } = useCartContext();
   const totalCartitems = useCart((s) => s.getTotalItems());
+  const {hasAuth} = useGlobalState();
+  const {showToast} = useToast()
 
+  const logoutUser = async  ()=>{
+    try {
+      const result = await AuthClientService.logout();
+      showToast(result, "success");
+    }catch(e){
+      showToast(e.message)
+    }
+  }
 
   useEffect(() => {
     const currentWord = PLACEHOLDERS[wordIndex];
@@ -53,9 +68,7 @@ export default function Header() {
 
         {/* Logo */}
         <div>
-          <Link href="/">
-            <Image className="relative md:top-0 top-[17px] md:w-[180px] w-[160px]" src="/logo.png" alt="Logo" width={180} height={40} priority />
-          </Link>
+          <Logo />
           <div className="md:hidden block w-fit absolute top-[32px] right-[11px]">
               <div className="flex gap-4">
                   <Link href="/shop"><Icon Icon={Store} /></Link>
@@ -80,7 +93,7 @@ export default function Header() {
             />
 
             <button
-              className="absolute right-0 top-0 h-full px-4 bg-gradient-to-r from-[var(--from-primary)] to-[var(--to-primary)] hover:from-green-600 hover:to-green-700 text-white rounded-r-md flex items-center gap-2 transition-colors"
+              className="absolute right-0 top-0 h-full px-4 bg-gradient-to-r from-[var(--from-primary)] to-[var(--to-primary)] hover:from-green-600 hover:to-green-700   transition-colors text-white rounded-r-md flex items-center gap-2"
             >
               <Search size={18} />
               <span className="hidden sm:inline">Search</span>
@@ -95,37 +108,10 @@ export default function Header() {
           <div onClick={() => setIsOpen(true)} ><Icon label="Cart" Icon={ShoppingCart} count={totalCartitems} /> </div>
           <Link href="/track-order"><Icon label="Track" Icon={Truck} /></Link>
           <Link href="/help"><Icon label="Help" Icon={HelpCircle} /></Link>
+          {hasAuth && <div onClick={async ()=>{logoutUser()}} ><Icon label="Logout" Icon={LogOutIcon} /></div> }
         </div>
 
       </div>
     </div>
-  );
-}
-function Icon({ Icon, label, count }) {
-  return (
-    <button
-      className="relative active:scale-95 flex flex-col items-center gap-1 text-[var(--secondary)] hover:text-[var(--primary)] transition group"
-    >
-      {/* ICON WRAPPER */}
-      <div className="relative">
-        <Icon
-          size={28}
-          strokeWidth={1.5}   // 👈 yahin magic hai
-          className="group-hover:scale-105 transition-transform"
-        />
-
-        {/* CART BADGE */}
-        {count > 0 && (
-          <span 
-            className={`absolute -top-2 -right-2 bg-[var(--primary)] text-white text-[10px] font-semibold h-5 min-w-[20px] px-1 flex items-center justify-center rounded-full shadow`} 
-            >
-            {count}
-          </span>
-        )}
-      </div>
-
-      {/* LABEL */}
-      <span className="text-sm font-medium">{label}</span>
-    </button>
   );
 }

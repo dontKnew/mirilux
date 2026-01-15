@@ -2,7 +2,7 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { useCart } from "@/context/CartContext";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import CartHeader from "./layout/CartHeader";
 import CartItems from "./items/CartItems";
@@ -14,6 +14,7 @@ import CartAddress from "./input/CartAddress";
 
 export default function CartSidebar() {
   const { isOpen, setIsOpen } = useCart();
+  const [totalPrice, setTotalPrice] = useState(0);
   const hasItems = useCart((s) => s.hasItems());
   useEffect(() => {
     if (isOpen) {
@@ -39,9 +40,9 @@ export default function CartSidebar() {
     };
   }, [isOpen, setIsOpen]);
 
-  // useEffect(()=>{
-  //   // setIsOpen(true)
-  // }, [])
+  useEffect(() => {
+    setIsOpen(true)
+  }, [])
 
   return (
     <AnimatePresence>
@@ -54,10 +55,8 @@ export default function CartSidebar() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           />
-
-          {/* Sidebar */}
           <motion.aside
-            className="fixed right-0 top-0 h-full w-full md:w-[450px] bg-white z-50 flex flex-col"
+            className="fixed right-0 top-0 h-full w-full md:w-[500px] bg-white z-50 flex flex-col"
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
@@ -66,12 +65,12 @@ export default function CartSidebar() {
             <CartHeader onClose={() => setIsOpen(false)} />
             <div className="flex-1 overflow-y-auto px-4 py-3 space-y-6">
               <CartFreeShipping total={50} />
-              <CartItems />
+              <CartItems setTotalPrice={setTotalPrice} />
               <CartCoupon />
               <CartAddress />
               <CartSuggestions />
             </div>
-            <CartFooter />
+            <CartFooter totalPrice={totalPrice} />
           </motion.aside>
         </>
       )}

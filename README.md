@@ -1,7 +1,61 @@
+## Payment Gateway 
+RazorePay  
+id : rzp_test_S1P3MQVlSJJp1N
+secret : RdlJTFfilLuQfkOuvIbvZmvH
+
+
+## Booking System
+### 1. Checkout Without Login
+CHECKOUT PAGE : order items, user info & address
+    = cart items fetch : with price calcualtion
+    = checkout button clicked 
+    = Login Process
+        i. if email_phone==Notregistered : account created & auto login without verify    
+        ii. if email==registed || email==phone_no : Force User to Login or Change the email || phone_no by popoup
+                    - Login Popup : 
+                            First Step :
+                                We have found email and phone no. in our server, Please login and Proceed to Order Booking
+                                - Login By Email With OTP 
+                                - Login By Email With Password 
+                                - Login By Phone No. With Password
+                                - Cancel, I will change Email and Phone No. (It will close the popup )
+                            Second Step :
+                                - Form : of above inputs 
+    = server response ...
+    = Then Step 2 with cartAddress Variable
+### 1.1 Checkout With Login
+ order items, & address
+    = cart items fetch : with price calcualtion
+    = Delivery Address : auto fillup
+    = checkout button clicked 
+    = server response ..
+    = Then Step 2 with cartAddress Variable 
+
+2. Order Summary Page  :
+    - Address in Memory
+    - Order Items in LocalStorage
+    - Place Order button clicked
+    - Order Save in DB & Return Token
+    - Then Step 3 with token in url
+3. Payment Page 
+    - Then Step 4 : with token
+4. Invoice  
+    = if Success
+        - Notify to Admin
+        - order info send to email
+        - Order Details Display
+        - Invoice Download Display
+        - 
+    = if failed
+        - Order Details Display
+        - Retry Payment Button : it will redirect to Step 3
+        - Cancel Button
+
+
+
 ********************** PRODUCT PRICE STRUCTURE  **********************
 1. Product Base Price = 200 
 2. Discount 20% : only for UI only, do not show in tax invoice etc. everywhere....
-
 
 --- Internal System --- 
 Base price              = 200 (Input By Admin)
@@ -81,4 +135,10 @@ Amount Payable       ₹236.00
 9. Login Page
     - Username With Password Login
     - Two Factor Authentication : Applicable only with Password Login -- Email, Phone Number
+
+
+
+=== Information Push to Github === 
+1. MYSQL Library...
+2. useCart
 

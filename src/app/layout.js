@@ -3,6 +3,7 @@ import "@/styles/globals.css";
 import { CartProvider } from "@/context/CartContext";
 import { ToastProvider } from '@/components/ui/toast/ToastProvider';
 import { createPageMetadata } from '@/data/metaData';
+import ClientAuthInit from '@/lib/ClientAuthInit';
 
 const font = Poppins({
   subsets: ['latin'],
@@ -23,7 +24,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className={font.variable} >
       <body>
-        
+          <ClientAuthInit />
           <CartProvider>
             <ToastProvider>
               {children}

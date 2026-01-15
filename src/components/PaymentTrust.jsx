@@ -41,8 +41,8 @@ function PaymentLogo({ src, alt }) {
       <Image
         src={src}
         alt={alt}
-        width={60}
-        height={32}
+        width={80} 
+        height={48}
         className="object-contain"
       />
     </div>

@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import BrandName from "../ui/BrandName";
 import Link from "next/link";
+import Logo from "../ui/Logo";
 
 export default function Footer() {
   return (
@@ -24,12 +25,7 @@ export default function Footer() {
           {/* BRAND */}
           <div className="relative -top-[25px]">
             {/* LOGO */}
-            <Image
-              src="/logo.png"
-              alt="MiriLux Logo"
-              width={180}
-              height={40}
-            />
+            <Logo />
 
             <p className=" text-gray-600 leading-relaxed max-w-xs text-justify">
               <BrandName /> is India’s premium perfume brand offering timeless, elegant, and long-lasting luxury fragrances crafted for modern lifestyles

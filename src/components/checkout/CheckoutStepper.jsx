@@ -4,9 +4,9 @@ import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
 
 const steps = [
-  { name: "Summary", path: "/checkout/summary" },
-  { name: "Payment", path: "/checkout/payment" },
-  { name: "Invoice", path: "/checkout/success" },
+  { name: "Order Summary", path: "/checkout/summary" },
+  { name: "Order Payment", path: "/checkout/payment" },
+  { name: "Order Invoice", path: "/checkout/success" },
 ];
 
 export default function CheckoutStepper() {
@@ -16,7 +16,7 @@ export default function CheckoutStepper() {
   );
 
   return (
-    <div className="mb-2 px-2 py-4 rounded">
+    <div className="md:mb-2 px-2 md:py-4 pt-4 pb-2 rounded">
       {/* CENTERED STEPPER */}
       <div className="flex justify-center md:bg-gray-100 bg-white">
         <div className="flex items-center w-fit">

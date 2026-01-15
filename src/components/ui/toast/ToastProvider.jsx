@@ -8,12 +8,13 @@ const ToastContext = createContext(null);
 export function ToastProvider({ children }) {
   const [toasts, setToasts] = useState([]);
 
-  const showToast = ({
-    type,
+  const showToast = (
     message,
+    type = "error",
     position = "top-center",
     duration = 3000,
-  }) => {
+  ) => {
+    // console.warn(message, type, "Toast");
     const id = Date.now();
 
     setToasts((prev) => [

@@ -1,4 +1,5 @@
 import { seoConfig } from "./seo";
+
 export function createPageMetadata({
   title,
   description,
@@ -12,6 +13,9 @@ export function createPageMetadata({
   const url = `${seoConfig.siteUrl}${path}`;
 
   return {
+    // ✅ ADD THIS
+    metadataBase: new URL(seoConfig.siteUrl),
+
     title: fullTitle,
     description,
 
@@ -35,7 +39,7 @@ export function createPageMetadata({
       type: "website",
       images: [
         {
-          url: seoConfig.ogImage,
+          url: seoConfig.ogImage, // can now be relative or absolute
           width: 1200,
           height: 630,
           alt: `${seoConfig.brand} Perfumes`,

@@ -11,7 +11,7 @@ export default function ProductCard({ product}) {
 
       {/* BEST SELLER */}
       
-        <span className="absolute bg-[var(--primary)] text-white text-xs font-bold px-3 py-1 rounded-br-lg">
+        <span className="absolute bg-[var(--primary)] text-white text-xs font-bold px-3 py-1 rounded-br-lg z-1">
           {product.badge} 
         </span>
 
@@ -19,9 +19,9 @@ export default function ProductCard({ product}) {
       <div className="relative h-50 flex items-center justify-center">
         <Image
           src={`/images/products/${product.image}`}
-          alt={product.title}
+          alt={product.name}
           width={160}
-          height={200}
+          height={160}
           className="object-contain hover:scale-120 active:scale-120 transition-transform duration-200 cursor-pointer"
         />
       </div>
@@ -29,11 +29,11 @@ export default function ProductCard({ product}) {
       {/* Content */}
       <div className="md:px-4 px-2 pb-4 text-center">
         <h3 className="font-semibold text-sm leading-snug">
-          {product.title}
+          {product.name} - {product.size}
         </h3>
 
         <p className="text-green-600 text-sm mt-2 line-clamp-2">
-          {product.description}
+          {product.long_name}
         </p>
 
         {/* <p className="text-sm mt-1">{product.size}</p> */}
@@ -61,10 +61,10 @@ export default function ProductCard({ product}) {
         <div className="flex items-center justify-center gap-3 mt-3">
           <span className="text-lg ">₹ {product.price}</span>
           <span className="line-through text-gray-400">
-            ₹ {product.mrp}
+            ₹ {product.old_price}
           </span>
           <span className="bg-green-200 text-green-700 text-xs px-2 py-1 rounded">
-            {product.discount}% off
+            {product.discount_percentage}% off
           </span>
         </div>
       </div>

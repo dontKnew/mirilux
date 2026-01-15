@@ -17,7 +17,7 @@ const CartItem = memo(function CartItem({
 
   return (
     <div
-      className={`flex gap-4 items-center pb-2 border-b bg-white transition-transform
+      className={`flex gap-4 items-center pb-2 border-b border-color bg-white transition-transform
         ${animate ? "scale-[1.02]" : "scale-100"}`}
     >
       <img

@@ -11,28 +11,36 @@ export default function SummaryPage() {
   return (
     <div className="grid md:grid-cols-3 md:gap-6 gap-0">
       <div className="md:col-span-2 bg-white md:px-6 px-1 py-2 rounded-xl">
-        <h2 className="text-lg text-start font-semibold flex gap-1 mb-4 items-center">
-          <Link title="Cancel" className="active:bg-gray-100" href={"/"}><ArrowLeftIcon /> </Link>
-          <span>Order Summary</span>
-        </h2>
+        <p className="my-2 py-1 rounded text-center bg-[var(--secondary)]/10 text-[var(--secondary)]">Expected Delivery by 2-3 Days </p>
         <AddressPreview />
-        <div className="py-4">
-          <h2 className="mb-3">Product Details : </h2>
-          <CartItems />
+        <div>
+          <h2 className="text-lg mb-3">Product Details : </h2>
+            <CartItems />
         </div>
       </div>
 
       <div className="bg-white md:px-6 px-1 md:py-4 rounded-xl sticky top-28 h-fit">
         <PriceDetails />
-        <div className="md:relative fixed bottom-2 left-0 w-full flex justify-center">
+        <div className="md:mt-5 bg-white md:relative col-span-2 md:py-0 py-2 items-center fixed bottom-0 left-0 w-full gap-4 flex justify-center">
+        <Link
+            href="/"
+            className="
+            w-[140px] 
+            bg-primary-g transition-colors
+            text-white md:py-3 py-2 rounded-lg text-center font-medium "
+          >
+            Cancel 
+          </Link>
           <Link
             href="/checkout/payment"
-            className="w-[250px] shadow-[0_-4px_12px_rgba(0,0,0,0.08)] bg-[var(--primary)] hover:bg-[var(--secondary)] hover:scale-105 active:scale-95 text-white py-3 rounded-lg text-center font-medium  mt-4"
+            className="
+            w-[140px] 
+            bg-green-g transition-colors
+             text-white md:py-3 py-2 rounded-lg text-center font-medium "
           >
-            Place Order Rs. ₹1,515
+            Place Order
           </Link>
         </div>
-
       </div>
 
     </div>

@@ -7,6 +7,8 @@
   --secondary:#0a356a;
   --from-primary:#eb7a29;
   --to-primary:#b84f04;
+  --from-secondary:#16457d;
+  --to-secondary:#0a356a;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -24,6 +26,7 @@ body {
   font-weight:400;
   /* overflow-x: hidden; */
 }
+
 button {
   cursor: pointer;
 }
@@ -118,4 +121,26 @@ h1, h2, h3, h4, h5, h6 {
   border-left: var(--f) solid #0005;
   border-bottom: var(--r) solid #0000;
   clip-path: polygon(var(--f) 0,100% 0,100% 100%,calc(50% + var(--f)/2) calc(100% - var(--r)), var(--f) 100%,var(--f) var(--f),0 var(--f));
+}
+.bg-primary-g{
+  @apply bg-gradient-to-r from-[var(--from-primary)] to-[var(--to-primary)] hover:from-green-600 hover:to-green-700 hover:scale-105 active:scale-95
+}
+.bg-secondary-g{
+  @apply bg-gradient-to-r from-[var(--from-secondary)] to-[var(--to-secondary)] hover:from-green-600 hover:to-green-700 hover:scale-102 active:scale-99
+}
+.bg-green-g{
+  @apply bg-gradient-to-r from-green-600 to-green-700 hover:scale-102 active:scale-99
+}
+
+
+/* Thin scrollbar */
+.thin-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+.thin-scroll::-webkit-scrollbar-thumb {
+  background-color: #d1d5db;
+  border-radius: 9999px;
+}
+.thin-scroll::-webkit-scrollbar-track {
+  background: transparent;
 }

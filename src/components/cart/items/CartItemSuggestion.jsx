@@ -11,7 +11,7 @@ export default function CartItemSuggestion({ item, addToCart }) {
         <p className="font-medium">{item.name}</p>
         <p className="text-sm text-gray-500">
           ₹{item.price}
-          <span className="line-through ml-1">₹{item.mrp}</span>
+          <span className="line-through ml-1">₹{item.old_price}</span>
         </p>
       </div>
 

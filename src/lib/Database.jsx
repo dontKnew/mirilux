@@ -20,7 +20,8 @@ import mysql from "mysql2/promise";
     2.10 Raw SQL Execution
     2.11 Transactions
     2.12 Helper Methods (buildSelect, reset)
-    2.13 Static Entry Point (DB.table)
+    2.13 Count
+3. Static Entry Point (DB.table)
 
 ==================================================
 */
@@ -154,7 +155,7 @@ class DB {
   async first() {
     this.limit(1);
     const rows = await this.get();
-    return rows[0] || null;
+    return rows[0] ?? null;
   }
 
   /* ===============================
@@ -163,6 +164,11 @@ class DB {
 
   async insert(data = {}) {
     try {
+      for (const [key, value] of Object.entries(data)) {
+          if (value === undefined) {
+            throw new Error(`Undefined value for column: ${key}-${value}`);
+          }
+        }
       const keys = Object.keys(data);
       const values = Object.values(data);
 
@@ -318,8 +324,39 @@ class DB {
     this.limitVal = "";
   }
 
+
   /* ===============================
-     2.13 STATIC ENTRY
+     2.14. Count
+  ================================ */
+
+  async count(column = "*") {
+    try {
+      // console.warn(this.wheres, "wheres");
+      const sql = `
+        SELECT COUNT(${column}) as total
+        FROM ${this.table}
+        ${this.joins.join(" ")}
+        ${this.wheres.length ? "WHERE " + this.wheres.join(" AND ") : ""}
+      `;
+      const [rows] = await this._execute(sql, this.params);
+      return rows[0]?.total || 0;
+    } catch (err) {
+      throw new Error(`COUNT failed: ${err.message}`);
+    } finally {
+      this.reset();
+    }
+  }
+
+  async exists() {
+    const count = await this.count();
+    return count > 0;
+  }
+
+
+
+
+  /* ===============================
+     3. STATIC ENTRY
   ================================ */
 
   static table(name) {

@@ -24,7 +24,7 @@ export default function Main({children}) {
       <PaymentTrust />
       <Testimonials />
       <ShippingSupport />
-      <PopupOffer />
+      {/* <PopupOffer /> */}
       <MobileBottomNav />
       <CartSidebar />
       <Footer />

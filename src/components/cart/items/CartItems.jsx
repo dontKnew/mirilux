@@ -7,34 +7,36 @@ import CartItemSkeleton from "./CartItemSkeleton";
 import ButtonShop from "../../ui/buttons/ButtonShop";
 import Image from "next/image";
 import { useDebounceCallback } from "@/hooks/useDebounceCallback";
+import useApiRequest from "@/hooks/useApiRequest";
 
-export default function CartItems() {
+export default function CartItems({setTotalPrice}) {
   const cart = useCart((s) => s.items);
   const updateQty = useCart((s) => s.updateQty);
   const removeItem = useCart((s) => s.removeItem);
-
+  const { send, data, error, loading } = useApiRequest();
   const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(false);
-
   const productIdsKey = cart.map((i) => i.id).sort().join("-");
 
   useEffect(() => {
-    if (cart.length === 0) {
+    if(cart.length === 0) {
       setProducts([]);
       return;
     }
-
-    setLoading(true);
-
-    fetch("/api/products/cart", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ids: cart.map((i) => i.id) }),
-    })
-      .then((res) => res.json())
-      .then(setProducts)
-      .finally(() => setLoading(false));
+    send("/products/cart", { ids: cart.map((i) => i.id) });
   }, [productIdsKey]);
+
+  // Update products when API data arrives
+  useEffect(() => {
+    if (data) {
+      setProducts(data);
+      let totalPrice = 0;
+      for(const product of products){
+          totalPrice +=product.price;
+      }
+      setTotalPrice(totalPrice);
+    }
+  }, [data]);
+
 
   const cartItems = useMemo(() => {
     return products.map((product) => {

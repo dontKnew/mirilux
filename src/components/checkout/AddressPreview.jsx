@@ -1,8 +1,8 @@
 import { MapPin, User, Pencil, Phone, Mail } from "lucide-react"
 export default function AddressPreview(){
-    return   <div className="border border-color rounded px-3 py-4 mb-4 bg-white">
+    return   <div className="border-b border-color rounded py-4 mb-4 bg-white">
           <div className="flex items-center justify-between mb-3">
-            <p className="font-semibold">Delivery To</p>
+            <p className="font-medium text-lg">Delivery To</p>
 
             <button
               type="button"
@@ -14,7 +14,7 @@ export default function AddressPreview(){
           </div>
 
           {/* Content */}
-          <div className="text-gray-700 space-y-4">
+          <div className="space-y-4">
 
             {/* Name / Phone / Email */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-y-3 gap-x-6">

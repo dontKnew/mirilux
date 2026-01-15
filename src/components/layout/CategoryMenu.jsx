@@ -1,36 +1,37 @@
 "use client";
-
 import { useEffect, useRef, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
-
-const categories = [
-  "HOME", "MEN", "WOMEN", "UNISEX", "OUD", "FLORAL", "WOODY",
-  "FRESH", "GIFTS", "NEW", "BEST SELLERS", "LUXURY", "ALL"
-];
+import { Categories } from "@/data/categories";
 
 export default function CategoryMenu() {
   const router = useRouter();
   const pathname = usePathname();
 
-  const containerRef = useRef(null);
   const itemRefs = useRef({});
   const sliderRef = useRef(null);
 
-  const [active, setActive] = useState("");
+  const [active, setActive] = useState("home");
 
-  /* 🔹 URL se active category sync */
+  /* 🔹 URL → active sync */
   useEffect(() => {
-    const slug = pathname.split("/").pop()?.toUpperCase();
-    if (slug && categories.includes(slug)) {
-      setActive(slug);
+    if (pathname === "/") {
+      setActive("home");
+      return;
+    }
+
+    const slug = pathname.split("/").pop()?.toLowerCase();
+    const match = Categories.find(cat => cat.slug === slug);
+
+    if (match) {
+      setActive(match.slug);
     } else {
-      setActive("HOME");
+      setActive("home");
     }
   }, [pathname]);
 
   /* 🔹 Move slider */
-  const moveSlider = (cat) => {
-    const el = itemRefs.current[cat];
+  const moveSlider = (key) => {
+    const el = itemRefs.current[key];
     const slider = sliderRef.current;
     if (!el || !slider) return;
 
@@ -38,12 +39,12 @@ export default function CategoryMenu() {
     slider.style.left = `${el.offsetLeft}px`;
   };
 
-  /* 🔹 Active item scroll + slider sync */
+  /* 🔹 Scroll + slider sync */
   useEffect(() => {
-    const activeEl = itemRefs.current[active];
-    if (!activeEl) return;
+    const el = itemRefs.current[active];
+    if (!el) return;
 
-    activeEl.scrollIntoView({
+    el.scrollIntoView({
       behavior: "smooth",
       inline: "center",
       block: "nearest",
@@ -52,39 +53,56 @@ export default function CategoryMenu() {
     moveSlider(active);
   }, [active]);
 
-  const handleClick = (cat) => {
-    setActive(cat);
+  const handleClick = (key) => {
+    setActive(key);
 
-    if (cat === "HOME") {
+    if (key === "home") {
       router.push("/");
     } else {
-      router.push(`/category/${cat.toLowerCase()}`);
+      router.push(`/category/${key}`);
     }
   };
 
   return (
     <div className="bg-white/90 backdrop-blur border-y border-color shadow-md">
       <div className="max-w-7xl mx-auto px-4">
-        <div
-          ref={containerRef}
-          className="relative flex gap-2 md:justify-between justify-start overflow-x-auto scrollbar-hide"
-        >
+        <div className="relative flex gap-2 md:justify-between justify-start overflow-x-auto scrollbar-hide">
+
+          {/* Slider */}
           <span
             ref={sliderRef}
             className="absolute top-1/2 -translate-y-1/2 h-9 rounded bg-[var(--primary)]/10 transition-all duration-300 ease-out pointer-events-none"
           />
 
-          {categories.map((cat) => {
-            const isActive = active === cat;
+          {/* 🏠 HOME (separate) */}
+          <button
+            type="button"
+            ref={(el) => (itemRefs.current["home"] = el)}
+            onClick={() => handleClick("home")}
+            onMouseEnter={() => moveSlider("home")}
+            className={`relative z-10 md:px-4 px-2 py-2 md:text-base text-sm font-medium rounded transition-colors
+              ${
+                active === "home"
+                  ? "text-[var(--primary)]"
+                  : "text-[var(--secondary)] hover:text-[var(--primary)]"
+              }
+            `}
+          >
+            Home
+          </button>
+
+          {/* Categories */}
+          {Categories.map((cat) => {
+            const isActive = active === cat.slug;
 
             return (
               <button
-                type="button" // ✅ VERY IMPORTANT
-                key={cat}
-                ref={(el) => (itemRefs.current[cat] = el)}
-                onClick={() => handleClick(cat)}
-                onMouseEnter={() => moveSlider(cat)}
-                className={`relative z-10 md:px-4 px-2 py-2 md:text-base text-sm whitespace-nowrap font-[500] transition-colors duration-200 rounded
+                type="button"
+                key={cat.id}
+                ref={(el) => (itemRefs.current[cat.slug] = el)}
+                onClick={() => handleClick(cat.slug)}
+                onMouseEnter={() => moveSlider(cat.slug)}
+                className={`relative z-10 md:px-4 px-2 py-2 md:text-base text-sm whitespace-nowrap font-medium rounded transition-colors
                   ${
                     isActive
                       ? "text-[var(--primary)]"
@@ -92,7 +110,7 @@ export default function CategoryMenu() {
                   }
                 `}
               >
-                {cat}
+                {cat.name}
               </button>
             );
           })}

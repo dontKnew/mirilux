@@ -1,28 +1,26 @@
+"use client"
 import { useCart } from "@/lib/useCart";
 import CartItemSuggestion from "./CartItemSuggestion";
 import { useEffect, useState } from "react";
 import CartItemSuggestionSkeleton from "./CartItemSuggestionSkeleton";
+import useApiRequest from "@/hooks/useApiRequest";
 
 export default function CartSuggestions() {
   const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(false);
   const addItem = useCart((s) => s.addItem);
   const cartIds = useCart((s) => s.getItemIds);
+  const { send, data, error, loading } = useApiRequest();
   const addToCart = (id) => {
     addItem(id)
     setProducts((prev) => prev.filter((p) => p.id !== id));
   }
   useEffect(() => {
-    setLoading(true);
-    fetch("/api/products/suggestions", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ids: cartIds() }),
-    })
-      .then((res) => res.json())
-      .then(setProducts)
-      .finally(() => setLoading(false));
+    send("/products/suggestions", {ids:cartIds()})
   }, []);
+
+  useEffect(() => {
+    if (data) setProducts(data);
+  }, [data]);
 
   if (loading) {
     return (

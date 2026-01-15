@@ -17,9 +17,9 @@ const POSITION_CLASSES = {
 };
 
 export default function Toast({
-  type,
   message,
-  position = "top-center", // ✅ DEFAULT
+  type,
+  position, 
 }) {
   const isSuccess = type === "success";
 
@@ -32,7 +32,7 @@ export default function Toast({
       className={`
         fixed z-[9999] pointer-events-auto
         ${POSITION_CLASSES[position]}
-        max-w-[90vw] sm:max-w-[360px] w-fit
+        w-fit
         rounded-lg shadow-xl text-sm
         ${isSuccess ? "bg-green-600 text-white" : "bg-red-600 text-white"}
       `}
@@ -45,7 +45,6 @@ export default function Toast({
         )}
 
         <span
-          className="truncate whitespace-nowrap"
           title={message}
         >
           {message}
