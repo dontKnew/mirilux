@@ -6,16 +6,14 @@ import FloatingInput from "@/components/ui/FloatingInput";
 import { LOGIN_METHODS } from "@/data/constant";
 import useApiRequest from "@/hooks/useApiRequest";
 import { useToast } from "../ui/toast/ToastProvider";
+import AuthClientService from "@/services/AuthClientService";
 
-export default function LoginForm({ method, email, phone, autoSendOtp, setAutoSendOtp }) {
+export default function LoginForm({ method, email, phone, autoSendOtp, setAutoSendOtp, setHasLogged, emailOtpToken, setEmailOtpToken }) {
   const [password, setPassword] = useState("");
   const [otp, setOtp] = useState("");
-  const { send, data, error, loading } = useApiRequest();
-  const [emailOtpToken, setEmailOtpToken] = useState(null);
+  const { send, send2, data, error, loading } = useApiRequest();
   const { showToast } = useToast();
-  const [hasLogin, setHasLogin] = useState(false);
   const [isReSendOtp, setIsReSendOtp] = useState(false);
-
 
   // Auto Sen Otp
   const hasSentOtpRef = useRef(false);
@@ -32,28 +30,20 @@ export default function LoginForm({ method, email, phone, autoSendOtp, setAutoSe
     send("/login/otp/email", { email, emailOtpToken }); // emailOtpToken for re-send otp same
   }
 
-  const loginResponse = (response) => {
-    setHasLogin(false)
-    showToast("Login Successfully!", "success")
-  }
   const otpSendResponse = (response) => {
     if (method == LOGIN_METHODS.EMAIL_OTP) {
       showToast("OTP Send Successfully", "success");
+      // console.warn(response, "response empty token");
       setEmailOtpToken(response)
     }
   }
 
   useEffect(() => {
     if (data) {
-      if (hasLogin) {
-        loginResponse(data);
-      }
       if(isReSendOtp){
           otpSendResponse(data);
       }
-
-      setIsReSendOtp(false)
-      setHasLogin(false);
+      setIsReSendOtp(false);
     }
   }, [data])
 
@@ -65,8 +55,14 @@ export default function LoginForm({ method, email, phone, autoSendOtp, setAutoSe
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setHasLogin(true);
-    send("/login", { method, email, phone, password, otp, emailOtpToken });
+    try {
+      const respnose = await send2("/login", { method, email, phone, password, otp, emailOtpToken });
+      setHasLogged(true)
+      AuthClientService.setAccessToken(respnose);
+      showToast("Login Successfully!", "success")
+    }catch(e){
+      showToast(e.message);
+    }
   }
 
   return (
@@ -99,13 +95,13 @@ export default function LoginForm({ method, email, phone, autoSendOtp, setAutoSe
             onChange={(e) => setOtp(e.target.value)}
             icon={Lock}
           />
-          <button
-            disabled={loading}
-            onClick={() => sendOtp()}
+            <button
             type="button"
+            disabled={loading}
+            onClick={sendOtp}
             className="w-[175px] rounded-xl px-2 text-white
-            bg-gradient-to-r from-[var(--from-secondary)] to-[var(--to-secondary)]
-            hover:opacity-90 transition"
+              bg-gradient-to-r from-[var(--from-secondary)] to-[var(--to-secondary)]
+              hover:opacity-90 transition disabled:opacity-50"
           >
             Resend Code
           </button>
@@ -138,10 +134,10 @@ export default function LoginForm({ method, email, phone, autoSendOtp, setAutoSe
         type="submit"
         disabled={loading}
         className="w-full rounded-xl py-3 text-white font-semibold
-        bg-gradient-to-r from-[var(--from-primary)] to-[var(--to-primary)]
-        hover:opacity-90 transition"
+          bg-gradient-to-r from-[var(--from-primary)] to-[var(--to-primary)]
+          hover:opacity-90 transition disabled:opacity-50"
       >
-        {method === LOGIN_METHODS.EMAIL_OTP ? "Login Account" : "Login Account"}
+        Login Account
       </button>
     </form>
   );

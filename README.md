@@ -37,8 +37,13 @@ CHECKOUT PAGE : order items, user info & address
     - Place Order button clicked
     - Order Save in DB & Return Token
     - Then Step 3 with token in url
+
 3. Payment Page 
+    - fetch Payment Method
     - Then Step 4 : with token
+    3.1 Payment Method: COD
+            - 
+    - 
 4. Invoice  
     = if Success
         - Notify to Admin

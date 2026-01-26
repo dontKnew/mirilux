@@ -12,10 +12,10 @@ class EncryptedServer {
     privateKeyPath = "private.pem",
     publicKeyPath = "public.pem"
   ) {
-    this.privateKey = fs.readFileSync(privateKeyPath, "utf8");
-    this.publicKey = fs.readFileSync(publicKeyPath, "utf8");
-    // this.privateKey = process.env.PRIVATE_KEY;
-    // this.publicKey = process.env.PUBLIC_KEY;
+    // this.privateKey = fs.readFileSync(privateKeyPath, "utf8");
+    // this.publicKey = fs.readFileSync(publicKeyPath, "utf8");
+    this.privateKey = process.env.PRIVATE_KEY;
+    this.publicKey = process.env.PUBLIC_KEY;
   }
 
   /* ================= PUBLIC KEY ================= */

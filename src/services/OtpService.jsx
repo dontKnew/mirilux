@@ -2,6 +2,7 @@ import DB from "@/lib/Database";
 import { OTP_NAME, OTP_PURPOSE } from "@/data/constant";
 import EncryptorService from "./security/EncryptorService";
 import HasherService from "./security/HasherService";
+import { cache } from "react";
 
 export class OtpService {
   constructor({
@@ -19,7 +20,7 @@ export class OtpService {
   // PRIVATE HELPERS
   // ===============================
 
-  #generateOtp() {
+  #getOtp() {
     return Math.floor(100000 + Math.random() * 900000).toString();
   }
 
@@ -27,8 +28,35 @@ export class OtpService {
   // GENERATE OTP
   // ===============================
 
-  async generateOtp(email) {
-    const otp = this.#generateOtp();
+  async generateOtp(email, emailOtpToken=null) {
+    if(emailOtpToken){
+      try {
+        // console.warn("re used the token ")
+          const hasOtpData = await this.#getOtpData(emailOtpToken);
+          if(hasOtpData){
+            if(!hasOtpData.is_used){
+              if(!new Date(hasOtpData.expires_at) < new Date()) {
+                const server_otp = EncryptorService.decrypt(hasOtpData.otp_hash);
+                 if(hasOtpData.attempts >= hasOtpData.max_attempts) {
+                      console.warn("re-used otp has many attempts");
+                  }else {
+                    return {token:emailOtpToken, email:hasOtpData.value, otp:server_otp}
+                  }
+              }else {
+                // console.warn("otp is expired");
+              }
+            }else {
+              // console.warn("otp already used");
+            }
+          }else {
+            // console.warn("otp data not found", hasOtpData);
+          }
+      }catch(e){
+        // Ignore Error
+        
+      }
+    }
+    const otp = this.#getOtp();
 
     const expiresAt = new Date(Date.now() + this.ttlMinutes * 60 * 1000).toISOString();
 
@@ -36,7 +64,7 @@ export class OtpService {
       purpose: this.purpose,
       name: OTP_NAME.EMAIL,
       value: email,
-      otp_hash: HasherService.hash(otp),
+      otp_hash: EncryptorService.encrypt(otp),
       attempts: 0,
       max_attempts: this.maxAttempts,
       expires_at: expiresAt
@@ -45,6 +73,15 @@ export class OtpService {
     const token = EncryptorService.encrypt(String(otpId));
 
     return { token, otp, email }
+  }
+
+  async #getOtpData(token){
+      const otpId = Number(EncryptorService.decrypt(token));
+      if (!otpId) {
+        throw new Error("Invalid Code token");
+      }
+      const record = await this.db.where("id", "=", otpId).first();
+      return record;
   }
 
 
@@ -57,17 +94,10 @@ export class OtpService {
       throw new Error("code is required" );
     }
     try {
-      let otpId;
-      otpId = Number(EncryptorService.decrypt(token));
-      if (!otpId) {
-        throw new Error("Invalid Code token");
-      }
-
-      // otp
-      const record = await this.db.where("id", "=", otpId).first();
+      const record = await this.#getOtpData(token);
       if (!record) throw new Error("Invalid token id ");
       if (record.is_used) { throw new Error("Token already used") }
-
+      const otpId = record.id;
       if (record.value != email) throw new Error("Invalid email provided")
 
       // Expiry check
@@ -83,9 +113,8 @@ export class OtpService {
       }
 
       // OTP verification
-      const new_otp_hahed = HasherService.hash(otp);
-      const isValid = HasherService.compare(otp, record.otp_hash);
-      if (!isValid) {
+      const server_otp = EncryptorService.decrypt(record.otp_hash);
+      if (otp!=server_otp) {
         await this.db.where("id", "=", otpId).update({ attempts: record.attempts + 1 });
         throw new Error("Invalid Code Entered");
         // throw new Error(JSON.stringify(record) + " newOtphash "+ new_otp_hahed)
@@ -94,10 +123,10 @@ export class OtpService {
       // Increment attempts
       await this.db.where("id", "=", otpId).update({
         attempts: record.attempts + 1,
-        is_used: isValid
+        is_used: true
       });
 
-      return isValid;
+      return true;
     } catch (e) {
       throw (e)
     }

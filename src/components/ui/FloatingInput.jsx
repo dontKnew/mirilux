@@ -13,6 +13,9 @@ export default function FloatingInput({
   readOnly = false
 }) {
   const [focused, setFocused] = useState(false);
+  if(value==null){
+     value = "";
+  }
   const isActive = focused || value;
 
   const borderColor = error

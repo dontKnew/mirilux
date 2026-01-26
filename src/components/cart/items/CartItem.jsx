@@ -17,8 +17,7 @@ const CartItem = memo(function CartItem({
 
   return (
     <div
-      className={`flex gap-4 items-center pb-2 border-b border-color bg-white transition-transform
-        ${animate ? "scale-[1.02]" : "scale-100"}`}
+      className={`flex gap-4 items-center pb-2 border-b border-color bg-white transition-transform ${animate ? "scale-[1.02]" : "scale-100"}`}
     >
       <img
         src={`/images/products/${item.image}`}
@@ -52,7 +51,13 @@ const CartItem = memo(function CartItem({
       </div>
 
       <div className="flex flex-col items-end gap-5">
-        <p className="font-semibold">₹{item.price}</p>
+        <div className="flex gap-2">
+          {/* <span className="line-through text-red-400">₹{item.old_price}</span> */}
+          <span className="bg-green-200 text-green-700 text-xs px-2 py-1 rounded">
+            {item.discount_percentage}% off
+          </span>
+          <p className="font-semibold">₹{(item.price * item.qty)}</p>
+        </div>
         <button
           onClick={onRemove}
           className="text-gray-400 hover:text-red-500"

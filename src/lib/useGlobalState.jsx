@@ -11,7 +11,7 @@ const EMPTY_ADDRESS = {
   country: null
 };
 
-export const useGlobalState = create((set) => ({
+export const useGlobalState = create((set, get) => ({
   cartAddress: EMPTY_ADDRESS,
 
   hasAuth: false,
@@ -25,7 +25,16 @@ export const useGlobalState = create((set) => ({
 
   setAuthUser: (authUser) =>
     set({ hasAuth: true, authUser }),
-
+  
+  isCartAddress:()=>{
+      const { cartAddress } = get();
+     for (const [key, value] of Object.entries(cartAddress)) {
+        if (!value || value=="") {
+          return true;
+        }
+      }
+      return false;
+  },
   clearAuth: () =>
     set({ hasAuth: false, authUser: null }),
 }));

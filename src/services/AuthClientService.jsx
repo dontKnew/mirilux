@@ -13,6 +13,10 @@ class AuthClientService {
   static setAccessToken(token, user) {
     accessToken = token;
     useGlobalState.getState().setAuthUser(user); // set logged user...
+    if(useGlobalState.getState().isCartAddress()){
+        const deliveryAddress = user.deliveryAddress;
+        useGlobalState.getState().setCartAddress(deliveryAddress);
+    }
   }
 
   static getAccessToken() {
@@ -34,7 +38,7 @@ class AuthClientService {
       
     } catch (e) {
       // ❗ silent fail for guest users
-      console.warn("Auth init failed:", e.message);
+      console.warn("Auth init failed:", e);
     }
   }
 

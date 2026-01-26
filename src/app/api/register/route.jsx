@@ -7,10 +7,10 @@ export async function POST(req) {
   try {
     // RegisterAndLogin
     const {user} = await api.request();
-    const data = auth.registerAndLogin(user);
+    const data = await auth.registerAndLogin(user);
     return api.response({ success: true, data});
   } catch (err) {
-    console.error(err)
+    // console.error(err)
     return api.responseFailPlain(err.message);
   }
 }

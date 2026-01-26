@@ -21,11 +21,23 @@ export default function useApiRequest() {
       console.warn(err);
       const message = err?.message || "UNKNOWN_ERROR";
       setError(message);
-      // throw err;
     } finally {
       setLoading(false);
     }
   }, []);
 
-  return { send, data, error, loading};
+  const send2 = useCallback(async (url, payload, options = {}) => {
+    setLoading(true);
+    try {
+      const api = new ApiRequest();
+      const response = await api.send(url, payload, options);
+      return response.data;
+    }catch(err){
+      throw(err)
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  return { send, send2, data, error, loading, setLoading};
 }

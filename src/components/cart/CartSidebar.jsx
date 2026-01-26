@@ -11,11 +11,12 @@ import CartFooter from "./layout/CartFooter";
 import CartCoupon from "./pricing/CartCoupon";
 import CartFreeShipping from "./pricing/CartFreeShipping";
 import CartAddress from "./input/CartAddress";
+import { useGlobalState } from "@/lib/useGlobalState";
 
 export default function CartSidebar() {
   const { isOpen, setIsOpen } = useCart();
-  const [totalPrice, setTotalPrice] = useState(0);
-  const hasItems = useCart((s) => s.hasItems());
+  const [priceData, setPriceData] = useState(0);
+  
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
@@ -41,7 +42,7 @@ export default function CartSidebar() {
   }, [isOpen, setIsOpen]);
 
   useEffect(() => {
-    setIsOpen(true)
+    setIsOpen(false)
   }, [])
 
   return (
@@ -64,13 +65,13 @@ export default function CartSidebar() {
           >
             <CartHeader onClose={() => setIsOpen(false)} />
             <div className="flex-1 overflow-y-auto px-4 py-3 space-y-6">
-              <CartFreeShipping total={50} />
-              <CartItems setTotalPrice={setTotalPrice} />
+              <CartFreeShipping total={priceData.total_amount} />
+              <CartItems setPriceData={setPriceData} />
               <CartCoupon />
               <CartAddress />
               <CartSuggestions />
             </div>
-            <CartFooter totalPrice={totalPrice} />
+            <CartFooter totalPrice={priceData.total_amount} />
           </motion.aside>
         </>
       )}

@@ -9,7 +9,7 @@ import Image from "next/image";
 import { useDebounceCallback } from "@/hooks/useDebounceCallback";
 import useApiRequest from "@/hooks/useApiRequest";
 
-export default function CartItems({setTotalPrice}) {
+export default function CartItems({ setPriceData }) {
   const cart = useCart((s) => s.items);
   const updateQty = useCart((s) => s.updateQty);
   const removeItem = useCart((s) => s.removeItem);
@@ -18,7 +18,7 @@ export default function CartItems({setTotalPrice}) {
   const productIdsKey = cart.map((i) => i.id).sort().join("-");
 
   useEffect(() => {
-    if(cart.length === 0) {
+    if (cart.length === 0) {
       setProducts([]);
       return;
     }
@@ -29,21 +29,45 @@ export default function CartItems({setTotalPrice}) {
   useEffect(() => {
     if (data) {
       setProducts(data);
-      let totalPrice = 0;
-      for(const product of products){
-          totalPrice +=product.price;
-      }
-      setTotalPrice(totalPrice);
     }
   }, [data]);
 
+  const { cartItems, priceData } = useMemo(() => {
+    let priceData = {
+      qty: 0,
+      price: 0,
+      discount: 0,
+      old_price: 0,
+      coupon: 0,
+      shipping: 0,
+      total_amount: 0,
+    };
 
-  const cartItems = useMemo(() => {
-    return products.map((product) => {
+    const items = products.map((product) => {
       const cartItem = cart.find((c) => c.id === product.id);
-      return { ...product, qty: cartItem?.qty ?? 1 };
+      const qty = cartItem?.qty ?? 1;
+
+      priceData.qty += qty;
+      priceData.price += qty * product.price;
+      priceData.old_price += qty * product.old_price;
+      priceData.discount += qty * product.discount_amount;
+      priceData.total_amount = priceData.price;
+
+      return {
+        ...product,
+        qty,
+        price: qty * product.price,
+        old_price: qty * product.old_price,
+      };
     });
+
+    return { cartItems: items, priceData };
   }, [products, cart]);
+
+  useEffect(() => {
+    // console.warn(priceData, "price data");
+    setPriceData(priceData);
+  }, [priceData, setPriceData])
 
   // 🔥 Debounced updater
   const debouncedUpdate = useDebounceCallback(updateQty, 250);

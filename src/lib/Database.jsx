@@ -15,7 +15,7 @@ import mysql from "mysql2/promise";
     2.5  Where Conditions
     2.6  Order By & Limit
     2.7  Read Operations (get, first)
-    2.8  Write Operations (insert, update, delete, truncate)
+    2.8  Write Operations (insert, insertBluk, update, delete, truncate)
     2.9  Pagination
     2.10 Raw SQL Execution
     2.11 Transactions
@@ -180,9 +180,47 @@ class DB {
       const [res] = await this._execute(sql, values);
       return res.insertId;
     } catch (err) {
-      throw new Error(`INSERT failed: ${err.message}`);
+      throw new Error(`INSERT[${this.table}] failed: ${err.message}`);
     }
   }
+
+  async insertBulk(rows = []) {
+      try {
+        if (!Array.isArray(rows) || rows.length === 0) {
+          throw new Error("insertBulk requires a non-empty array");
+        }
+        // Ensure all rows have the same keys
+        const keys = Object.keys(rows[0]);
+        for (let i = 0; i < rows.length; i++) {
+          for (const key of keys) {
+            if (!(key in rows[i])) {
+              throw new Error(`Missing column "${key}" in row ${i}`);
+            }
+            if (rows[i][key] === undefined) {
+              throw new Error(`Undefined value for column "${key}" in row ${i}`);
+            }
+          }
+        }
+
+        // Build SQL
+        const placeholdersPerRow = `(${keys.map(() => "?").join(", ")})`;
+        const placeholders = rows.map(() => placeholdersPerRow).join(", ");
+
+        const sql = `
+          INSERT INTO ${this.table} (${keys.join(", ")})
+          VALUES ${placeholders}
+        `;
+
+        // Flatten values
+        const values = rows.flatMap(row => keys.map(k => row[k]));
+
+        const [res] = await this._execute(sql, values);
+        return res.affectedRows;
+      } catch (err) {
+        throw new Error(`BULK INSERT failed: ${err.message}`);
+      }
+    }
+
 
   async update(data = {}) {
     if (!this.wheres.length) {
@@ -287,7 +325,6 @@ class DB {
         },
         sql: (q, p = []) => conn.execute(q, p),
       };
-
       const result = await callback(trx);
       await conn.commit();
       return result;

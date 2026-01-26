@@ -1,3 +1,4 @@
+"use client"
 import CheckoutStepper from "@/components/checkout/CheckoutStepper";
 import Container from "@/components/layout/Container";
 import CheckoutHeader from "./checkoutHeader";

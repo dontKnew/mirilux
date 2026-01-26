@@ -1,7 +1,7 @@
 "use client";
 
 import { useCart } from "@/lib/useCart";
-import { ArrowRightCircle, Loader2 } from "lucide-react";
+import { ArrowLeftCircle, ArrowRightCircle, ArrowUpCircleIcon, Loader2, Send } from "lucide-react";
 import { useCart as useCartContext } from "@/context/CartContext";
 import { useRouter } from "next/navigation";
 import useApiRequest from "@/hooks/useApiRequest";
@@ -9,6 +9,8 @@ import { useEffect, useState } from "react";
 import { useToast } from "@/components/ui/toast/ToastProvider";
 import { useGlobalState } from "@/lib/useGlobalState";
 import LoginPopup from "@/components/auth/LoginPopup";
+import AuthClientService from "@/services/AuthClientService";
+import ButtonLoader from "@/components/ui/buttons/ButtonLoader";
 
 export default function CartFooter({totalPrice }) {
   const hasItems = useCart((s) => s.hasItems());
@@ -18,7 +20,7 @@ export default function CartFooter({totalPrice }) {
   const {showToast} = useToast();
   const {hasAuth, cartAddress} = useGlobalState();
   const [openLogin, setOpenLogin] = useState(false);
-  if (!hasItems) return null;
+  const [hasLogged, setHasLogged] = useState(false);
 
   const checkout = () => {
     if (loading) return;
@@ -31,9 +33,9 @@ export default function CartFooter({totalPrice }) {
     if(!hasAuth){
       send("/register", {user:cartAddress}, {credentials:true}) // create authentication1
     }else {
-      showToast("Proceed to Order Booking", "success");
+      // showToast("Proceed to Order Booking", "success");
       setIsOpen(false);
-      // router.push("/checkout/summary");
+      router.push("/checkout/summary");
     }
   };
 
@@ -43,43 +45,48 @@ export default function CartFooter({totalPrice }) {
       return ;
     }
     if(data){
-      console.warn("Data Got It", data);
       // user is not currently login, so process can be login 
       if(!hasAuth){
-        showToast("Account Created & Proceed to Order Booking", "success");
-        setIsOpen(false);
-        // router.push("/checkout/summary");
+        if(!data.is_new_user){
+           setOpenLogin(true);
+        }else {
+          // user is new & user login successfull , it will get accessToken
+          showToast("Account Created & Proceed to Order Booking", "success");
+          AuthClientService.setAccessToken(data.access_token);
+          setIsOpen(false);
+          router.push("/checkout/summary");
+        }
       }else {
         showToast("something is wrong")
       }
     }
   }, [data, error])
 
+  // Listen popup login ok or not yet
+  useEffect(()=>{
+    if(hasLogged){
+      showToast("Login Successfully", "success");
+      setIsOpen(false);
+      router.push("/checkout/summary");
+    }
+  }, [hasLogged])
+
+  
+  if (!hasItems) return null;
+
   return (
     <div className="border-t border-color px-4 py-2">
-      <button
-        onClick={checkout}
-        disabled={loading}
-        className={`w-full flex items-center justify-center gap-2 
-        bg-gradient-to-r from-[var(--from-primary)] to-[var(--to-primary)]
-        hover:from-green-600 hover:to-green-700
-        text-white py-3 font-semibold rounded-md transition
-        disabled:opacity-70 disabled:cursor-not-allowed`}
-      >
-        {loading ? (
-          <>
-            <Loader2 className="animate-spin" />
-            Processing...
-          </>
-        ) : (
-          <>
-            <ArrowRightCircle />
-            CHECKOUT — ₹{totalPrice}
-          </>
-        )}
-      </button>
+      <ButtonLoader 
+      buttonColor="primary"
+      loadingText="Processing..." 
+      textIcon={<ArrowRightCircle className="h-5" />} 
+      text={`CHECKOUT — ₹${totalPrice}`} 
+      handleClick={checkout} 
+      loading={loading} className="w-full"/>
+      
       {openLogin && 
         <LoginPopup
+          setHasLogged={setHasLogged}
           open={openLogin}
           onClose={() => setOpenLogin(false)}
           email={cartAddress.email}

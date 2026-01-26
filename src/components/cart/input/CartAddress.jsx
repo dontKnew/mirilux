@@ -1,15 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import {
-  User,
-  Phone,
-  Mail,
-  MapPin,
-  Home,
-  Map,
-  Flag
-} from "lucide-react";
+import {User,Phone,Mail,MapPin,Home,Map,Flag} from "lucide-react";
 import FloatingInput from "@/components/ui/FloatingInput";
 import { useCart } from "@/lib/useCart";
 import useApiRequest from "@/hooks/useApiRequest";
@@ -19,20 +11,17 @@ import { useGlobalState } from "@/lib/useGlobalState";
 export default function AddressPage() {
   const hasItems = useCart((s) => s.hasItems());
 
-  const [fullName, setFullName] = useState("Sajid Ali");
-  const [phoneNo, setPhoneNo] = useState("7065221377");
-  const [email, setEmail] = useState("sajid.phpmaster@gmail.com");
-  const [pincode, setPincode] = useState("");
-  const [addressLine, setAddressLine] = useState("House No. 702, Gali No. 11");
-  const [city, setCity] = useState("");
-  const [state, setState] = useState("");
-  const [country, setCountry] = useState("");
+  const [fullName, setFullName] = useState('');
+  const [phoneNo, setPhoneNo] = useState('');
+  const [email, setEmail] = useState('');
+  const [pincode, setPincode] = useState('');
+  const [addressLine, setAddressLine] = useState('');
+  const [city, setCity] = useState('');
+  const [state, setState] = useState('');
+  const [country, setCountry] = useState('');
   const { send, data, error } = useApiRequest();
   const { showToast } = useToast();
-  const {setCartAddress} = useGlobalState();
-
-
-  if (!hasItems) return null;
+  const {setCartAddress, cartAddress} = useGlobalState();
 
   const isValidEmail = (v) =>
     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
@@ -64,7 +53,18 @@ export default function AddressPage() {
     }
   }, [data, error])
 
-
+  useEffect(()=>{
+    if(cartAddress){
+      setFullName(cartAddress.full_name);
+      setAddressLine(cartAddress.address_line);
+      setPincode(cartAddress.pincode);
+      setCity(cartAddress.city);
+      setState(cartAddress.state);
+      setCountry(cartAddress.country);
+      setEmail(cartAddress.email);
+      setPhoneNo(cartAddress.phone_no);
+    }
+  }, []);
 
   // Sync cart address
   useEffect(() => {
@@ -80,14 +80,16 @@ export default function AddressPage() {
     });
   }, [
     fullName,
-    phoneNo,
-    email,
+    phoneNo,email,
     addressLine,
     city,
     state,
     pincode,
     country
   ]);
+
+  
+  if (!hasItems) return '';
 
   return (
     <div>
@@ -102,7 +104,7 @@ export default function AddressPage() {
           icon={User}
           value={fullName}
           onChange={(e) => setFullName(e.target.value)}
-          success={fullName.length > 2}
+          success={fullName && fullName.length > 2}
         />
 
         <FloatingInput
@@ -115,7 +117,7 @@ export default function AddressPage() {
               ? "Invalid mobile number"
               : ""
           }
-          success={phoneNo.length === 10}
+          success={phoneNo && phoneNo.length === 10}
         />
       </div>
 
@@ -148,7 +150,7 @@ export default function AddressPage() {
               ? "Invalid pincode"
               : ""
           }
-          success={pincode.length === 6}
+          success={pincode && pincode.length === 6}
         />
 
 
@@ -157,7 +159,7 @@ export default function AddressPage() {
           icon={Map}
           value={city}
           onChange={(e) => setCity(e.target.value)}
-          success={city.length > 1}
+          success={city && city.length > 1}
         />
       </div>
 
@@ -187,7 +189,7 @@ export default function AddressPage() {
         icon={Home}
         value={addressLine}
         onChange={(e) => setAddressLine(e.target.value)}
-        success={addressLine.length > 10}
+        success={addressLine && addressLine.length > 10}
       />
     </div>
   );

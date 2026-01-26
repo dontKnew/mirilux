@@ -8,10 +8,11 @@ import LoginForm from "./LoginForm";
 import { useToast } from "../ui/toast/ToastProvider";
 import { LOGIN_METHODS } from "@/data/constant";
 
-export default function LoginPopup({open,onClose,email,phone}) {
+export default function LoginPopup({open,onClose,email,phone, setHasLogged}) {
   const [step, setStep] = useState(1);
   const [method, setMethod] = useState(null);
   const [autoSendOtp, setAutoSendOtp] = useState(null);
+  const [emailOtpToken, setEmailOtpToken] = useState(null);
 
   const goStep2 = async (m) => {
     if(autoSendOtp==null){
@@ -94,6 +95,9 @@ export default function LoginPopup({open,onClose,email,phone}) {
             </button>
 
             <LoginForm
+              setEmailOtpToken={setEmailOtpToken}
+              emailOtpToken={emailOtpToken}
+              setHasLogged={setHasLogged}
               autoSendOtp={autoSendOtp}
               setAutoSendOtp={setAutoSendOtp}
               method={method}

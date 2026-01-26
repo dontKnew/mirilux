@@ -1,32 +1,4 @@
 /* 
-********************** PRODUCT PRICE STRUCTURE  **********************
-=> Input By Admin : Base Product Price & Discount Input 
--- Product Price Understanding --
-
-Base Product Price        = 200   
-GST @18% on 200           = 36
---------------------------------
-Product Price (Incl. GST) = 236   ← actual selling price
-Old Price (Strike)        = 286   (236 + 50)  ← UI only Discount
-
-Coupon Discount           = ₹10(236*%10) // applicable to  product price gst inclusive even for percentage
-Shipping Amount           = 30
---------------------------------
-Final Payable             = 236 + 30 − 10
-                          = ₹256 ✅
-
---- User Display Price Info ---
-Base Price        ₹200
-GST @18%          ₹36
-----------------------
-Product Price     ₹236
-Coupon Discount   ₹10(236*%10) // applicable to  product price gst inclusive even for percentage
-
-Shipping          ₹30
-----------------------
-Final Amount      ₹256
-
-********************** END  **********************
 == Same Product Data == 
 id: 1,
 name: "Into Waves Men",
@@ -36,7 +8,7 @@ size: "100ml",
 price: 450, // random 200 to 500
 discount_type:"percentage", // random percentage | amount
 discount_amount:270, // if discount_type==percentage then get discount_amount by  price*60/100
-discount_percentage:"60%", // if discount_type==amount then get discount_percentage by  format discount_amount & discount_price
+discount_percentage:"60", // if discount_type==amount then get discount_percentage by  format discount_amount & discount_price
 old_price:"[price+discount_amount]",
 image: "p1.png", // random p1.png to p9.png
 badge: "New", // New | Popular | more 2 from your side
@@ -62,7 +34,7 @@ const Products = [
     price: 450,
     discount_type: "percentage",
     discount_amount: 270,
-    discount_percentage: "60%",
+    discount_percentage: "60",
     old_price: 720,
     image: "p1.png",
     badge: "New",
@@ -89,7 +61,7 @@ const Products = [
     price: 399,
     discount_type: "amount",
     discount_amount: 150,
-    discount_percentage: "38%",
+    discount_percentage: "38",
     old_price: 549,
     image: "p2.png",
     badge: "Popular",
@@ -116,7 +88,7 @@ const Products = [
     price: 499,
     discount_type: "percentage",
     discount_amount: 200,
-    discount_percentage: "40%",
+    discount_percentage: "40",
     old_price: 699,
     image: "p3.png",
     badge: "Trending",
@@ -143,7 +115,7 @@ const Products = [
     price: 500,
     discount_type: "percentage",
     discount_amount: 250,
-    discount_percentage: "50%",
+    discount_percentage: "50",
     old_price: 750,
     image: "p4.png",
     badge: "Luxury",
@@ -170,7 +142,7 @@ const Products = [
     price: 299,
     discount_type: "amount",
     discount_amount: 100,
-    discount_percentage: "33%",
+    discount_percentage: "33",
     old_price: 399,
     image: "p5.png",
     badge: "New",
@@ -197,7 +169,7 @@ const Products = [
     price: 480,
     discount_type: "percentage",
     discount_amount: 190,
-    discount_percentage: "40%",
+    discount_percentage: "40",
     old_price: 670,
     image: "p6.png",
     badge: "Popular",
@@ -224,7 +196,7 @@ const Products = [
     price: 349,
     discount_type: "percentage",
     discount_amount: 140,
-    discount_percentage: "40%",
+    discount_percentage: "40",
     old_price: 489,
     image: "p7.png",
     badge: "New",
@@ -251,7 +223,7 @@ const Products = [
     price: 420,
     discount_type: "amount",
     discount_amount: 170,
-    discount_percentage: "40%",
+    discount_percentage: "40",
     old_price: 590,
     image: "p8.png",
     badge: "Trending",
@@ -278,7 +250,7 @@ const Products = [
     price: 299,
     discount_type: "percentage",
     discount_amount: 120,
-    discount_percentage: "40%",
+    discount_percentage: "40",
     old_price: 419,
     image: "p9.png",
     badge: "Popular",
@@ -305,7 +277,7 @@ const Products = [
     price: 500,
     discount_type: "percentage",
     discount_amount: 250,
-    discount_percentage: "50%",
+    discount_percentage: "50",
     old_price: 750,
     image: "p1.png",
     badge: "Luxury",
@@ -332,7 +304,7 @@ const Products = [
     price: 379,
     discount_type: "amount",
     discount_amount: 130,
-    discount_percentage: "34%",
+    discount_percentage: "34",
     old_price: 509,
     image: "p2.png",
     badge: "New",
@@ -359,7 +331,7 @@ const Products = [
     price: 460,
     discount_type: "percentage",
     discount_amount: 180,
-    discount_percentage: "39%",
+    discount_percentage: "39",
     old_price: 640,
     image: "p3.png",
     badge: "Trending",
@@ -386,7 +358,7 @@ const Products = [
     price: 320,
     discount_type: "percentage",
     discount_amount: 130,
-    discount_percentage: "41%",
+    discount_percentage: "41",
     old_price: 450,
     image: "p4.png",
     badge: "New",
@@ -413,7 +385,7 @@ const Products = [
     price: 490,
     discount_type: "amount",
     discount_amount: 190,
-    discount_percentage: "39%",
+    discount_percentage: "39",
     old_price: 680,
     image: "p5.png",
     badge: "Popular",
@@ -440,7 +412,7 @@ const Products = [
     price: 299,
     discount_type: "percentage",
     discount_amount: 120,
-    discount_percentage: "40%",
+    discount_percentage: "40",
     old_price: 419,
     image: "p6.png",
     badge: "Gift",
@@ -467,7 +439,7 @@ const Products = [
     price: 470,
     discount_type: "percentage",
     discount_amount: 190,
-    discount_percentage: "40%",
+    discount_percentage: "40",
     old_price: 660,
     image: "p7.png",
     badge: "Best",
@@ -494,7 +466,7 @@ const Products = [
     price: 360,
     discount_type: "amount",
     discount_amount: 140,
-    discount_percentage: "39%",
+    discount_percentage: "39",
     old_price: 500,
     image: "p8.png",
     badge: "New",
@@ -521,7 +493,7 @@ const Products = [
     price: 340,
     discount_type: "percentage",
     discount_amount: 135,
-    discount_percentage: "40%",
+    discount_percentage: "40",
     old_price: 475,
     image: "p9.png",
     badge: "Popular",
@@ -548,7 +520,7 @@ const Products = [
     price: 499,
     discount_type: "percentage",
     discount_amount: 200,
-    discount_percentage: "40%",
+    discount_percentage: "40",
     old_price: 699,
     image: "p1.png",
     badge: "Gift",
@@ -575,7 +547,7 @@ const Products = [
     price: 500,
     discount_type: "percentage",
     discount_amount: 250,
-    discount_percentage: "50%",
+    discount_percentage: "50",
     old_price: 750,
     image: "p2.png",
     badge: "Luxury",

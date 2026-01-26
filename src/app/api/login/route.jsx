@@ -6,11 +6,10 @@ export async function POST(req) {
   const auth = new AuthService();
   try {
     const {method, email, phone, password, otp, emailOtpToken} = await api.request();
-    console.warn(otp, "OTP, Provided")
     const data = await auth.loginByMethods(method, email, phone, password, otp, emailOtpToken);
     return api.response({ success: true, data});
   } catch (err) {
-    console.error(err)
+    // console.error(err)
     return api.responseFailPlain(err.message);
   }
 }

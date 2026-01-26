@@ -1,6 +1,7 @@
 import DB from "@/lib/Database";
 import { AuthService } from "@/services/AuthService";
 import EmailService from "@/services/email/EmailService";
+import { OrderService } from "@/services/OrderService";
 import { OtpService } from "@/services/OtpService";
 import { PincodeService } from "@/services/PincodeService";
 import EncryptorService from "@/services/security/EncryptorService";
@@ -9,13 +10,25 @@ import { UserService } from "@/services/UserService";
 
 export default async function Page() {
 
+    const userService = new UserService();
+    const orderService = new OrderService();
+    const cartAddress = {
+        full_name:"Krishan",
+        phone_no:"1271982712",
+        email:"krishan@gmail.com",
+        address_line:"House No. 702, Gali No. 11",
+        state:"Delhi", city:"Dwarka", pincode:11002, country:"India"
+    }
+    orderService.user = await userService.getUser(49, "id");
+    const response = await orderService.createCartOrder(cartAddress, [{id:1, qty:2}, { id:2, qty:3}]);
+    return JSON.stringify({response});
 
-    const input = 4544;
-    const input_hash = HasherService.hash(input);
-    const input_hash2 = HasherService.hash("4544");
-    const input_compare = HasherService.compare("4544", input_hash)
+    // const input = 4544;
+    // const input_hash = HasherService.hash(input);
+    // const input_hash2 = HasherService.hash("4544");
+    // const input_compare = HasherService.compare("4544", input_hash)
 
-    return JSON.stringify({input, input_hash, input_compare, input_hash2});
+    // return JSON.stringify({input, input_hash, input_compare, input_hash2});
 
 
     // const input = "Hello World";

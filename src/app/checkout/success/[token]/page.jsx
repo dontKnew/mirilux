@@ -1,10 +1,38 @@
-"use client";
+  "use client";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { CheckCircle } from "lucide-react";
 import BrandName from "@/components/ui/BrandName";
+import { useParams } from "next/navigation";
+import { useToast } from "@/components/ui/toast/ToastProvider";
+import useApiRequest from "@/hooks/useApiRequest";
+import { useEffect, useState } from "react";
 
 export default function CheckoutSuccessPage() {
+  const {data, send, send2, error, loading} = useApiRequest();
+  const {showToast} = useToast();
+  const {token} = useParams();
+  const [order, setOrder]   = useState();
+
+    useEffect(()=>{
+        if(token){
+          send("/auth/order", {order_token:token}); 
+        }
+      }, [token])
+
+    useEffect(()=>{
+        if(error){
+          showToast(error)
+        }
+        if(data){
+          setOrder(data);
+          // showToast("Token Validated", "success")
+        }
+    }, [data, error])
+
+  if(!order){
+    return ;
+  }
   return (
     <div className="bg-gray-50 flex items-center justify-center md:px-4 px-0 py-3">
       
@@ -12,7 +40,7 @@ export default function CheckoutSuccessPage() {
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5 }}
-        className="bg-white max-w-md w-full rounded-2xl shadow-lg md:p-8 p-2 text-center"
+        className="md:bg-white max-w-md w-full rounded shadow-lg md:p-8 p-0 text-center"
       >
         {/* Success Icon */}
         <motion.div
@@ -53,11 +81,11 @@ export default function CheckoutSuccessPage() {
         >
           <div className="flex justify-between mb-1">
             <span className="text-gray-500">Order ID</span>
-            <span className="font-medium">#MLX234567</span>
+            <span className="font-medium">{order.order_number}</span>
           </div>
-          <div className="flex justify-between">
-            <span className="text-gray-500">Estimated Delivery</span>
-            <span className="font-medium">3–5 Business Days</span>
+          <div className="flex md:flex-row flex-column justify-between">
+            <span className="text-gray-500">Order Status</span>
+            <span className="font-medium">Confirmed</span>
           </div>
         </motion.div>
 
@@ -66,9 +94,9 @@ export default function CheckoutSuccessPage() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1 }}
-          className="text-xs text-gray-500 mt-4"
+          className="text-sm text-gray-500 mt-4"
         >
-          We’ve sent order details to your WhatsApp & Email.
+          We’ve sent order details to your  Email.
         </motion.p>
 
         {/* Actions */}

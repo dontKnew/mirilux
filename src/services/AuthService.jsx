@@ -14,16 +14,23 @@ export class AuthService {
 
     async getAuthUser(req) {
         const tokenData = this.getAccessTokenUser(req);
+        if(!tokenData){
+            throw new Error("No token user not found ");    
+        }
         if(tokenData?.user_id){
             const result = await this.#userService.getUser(tokenData.user_id);
             return result;
+        }else {
+            throw new Error("No User id Found ");
         }
-        return null;
     }
     async loginByEmail(email, password) {
         const user = await this.#userService.getUser(email, "email");
         if (!user) {
             throw new Error("Invalid email address");
+        }
+        if(!user.password){
+            throw new Error("You haven't created a password yet, try forget password");
         }
         const ok = await bcrypt.compare(password, user.password);
         if (!ok) {
@@ -36,6 +43,9 @@ export class AuthService {
         const user = await this.#userService.getUser(phone_no, "phone_no");
         if (!user) {
             throw new Error("Invalid Phone Number");
+        }
+        if (!user.password) {
+            throw new Error("You haven't created a password yet.");
         }
         const ok = await bcrypt.compare(password, user.password);
         if (!ok) {
@@ -195,7 +205,6 @@ export class AuthService {
             data.can_login_by_phone_no = can_login_by_phone_no;
             data.can_login_by_email = can_login_by_email;
         }
-        
         return data;
     }
 
@@ -207,11 +216,14 @@ export class AuthService {
                 case LOGIN_METHODS.EMAIL_OTP:   
                     const otpService = new OtpService();
                     result = await otpService.verifyOtp(emailOtpToken, otp, email)
-                    const user_data = this.#userService.getUser(email, "email");
-                    if(!user_data){
+                    const user_data = await this.#userService.getUser(email, "email");
+                    if(!user_data.email){
                         throw new Error("Email address is invalid");
                     }
-                    result = await this.directLogin(user_data.user_id);
+                    if(!user_data.id){
+                        throw new Error("User Id not found" );
+                    }   
+                    result = await this.directLogin(user_data.id);
                 break;
                 case LOGIN_METHODS.EMAIL_PASSWORD:
                     result = await this.loginByEmail(email, password);

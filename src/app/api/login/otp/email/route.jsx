@@ -12,14 +12,14 @@ export async function POST(req) {
     if (!userService.isEmailExists(email)) {
       throw new Error("Invalid email address");
     }
-    const otpData = await otpService.generateOtp(email);
+    const otpData = await otpService.generateOtp(email, emailOtpToken);
     const isEmailSend = await EmailService.sendOTP(otpData.email, otpData.otp);
     if (!isEmailSend) {
       throw new Error("Email not sent. Please try again")
     }
     return api.response({ success: true, data: otpData.token });
   } catch (err) {
-    console.error(err)
+    // console.error(err)
     return api.responseFailPlain(err.message);
   }
 }

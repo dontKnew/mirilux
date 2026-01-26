@@ -1,6 +1,7 @@
 //Error: GET failed: Bind parameters must not contain undefined. To pass SQL NULL specify JS null
 // where not used...
 import DB from "@/lib/Database";
+import { OrderService } from "./OrderService";
 export class UserService {
   #table;
   constructor(){
@@ -8,7 +9,33 @@ export class UserService {
   }
 
   async getUser(value, key="id"){
-    return await DB.table(this.#table).where(key, "=", value).first();
+    let userData =  await DB.table(this.#table).where(key, "=", value).first();
+    if(userData){
+      userData.deliveryAddress = await this.#getDeliveryAddress(userData);
+    }
+    return userData;
+    
+  }
+
+  async #getDeliveryAddress(userData){    
+    const orderService = new OrderService();
+    orderService.user = userData;
+    let address = await orderService.getLastOrderAddress();
+    if(!address){
+      address = await this.getUserAddress(userData);
+      if(address){
+        address.full_name = userData.full_name;
+        address.phone_no = userData.phone_no;
+        address.email = userData.email;
+      }
+    }
+    return address;
+  }
+
+  async getUserAddress(userData){
+    return await DB.table("user_addresses")
+      .select("address_line, city, state, pincode, country")
+      .where("user_id", "=", userData.id).orderBy("id", "DESC").first();
   }
   
   async registeruser(user) {
