@@ -69,7 +69,7 @@ export default function CartSidebar() {
               <CartItems setPriceData={setPriceData} />
               <CartCoupon />
               <CartAddress />
-              <CartSuggestions />
+              {/* <CartSuggestions /> */}
             </div>
             <CartFooter totalPrice={priceData.total_amount} />
           </motion.aside>

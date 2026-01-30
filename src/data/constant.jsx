@@ -1,3 +1,10 @@
+const WEBSITE = {
+  EMAIL:"support@mirilux.com",
+  PHONE:"+91 8069277273",
+  PHONE_URL:"918069277273",
+  ADDRESS:"C/O SMI Amina, Moh Gopalganj, Sahaswan, Budaun - 243638 Uttar Pradesh, India", 
+  ADMIN_EMAIL:"sajid.phpmaster@gmail.com"
+}
 const LOGIN_METHODS = {
   EMAIL_OTP: "EMAIL_OTP",
   EMAIL_PASSWORD: "EMAIL_PASSWORD",
@@ -16,11 +23,11 @@ const OTP_NAME = {
 };
 
 /*
-1. pending: 
+1. Pending: 
 2. confirmed:
   - order placed : confirmed
   - if payment_status!=paid then by_admin_verify==FALSE ? ==> CANCELLED
-3. shipped 
+3. Shipped 
 4. delivered: 
 5. return requested : return will after delivered
 6. return approved: 
@@ -146,4 +153,4 @@ export const PAYMENT_METHOD = {
 /* ============= END PAYMENT CONSTANT =============*/
 
 
-export {LOGIN_METHODS, OTP_NAME, OTP_PURPOSE, ORDER_STATUS, PAYMENT_ATTEMPT_STATUS, PAYMENT_COLLECTED_BY, SETTLEMENT_STATUS}
+export {WEBSITE, LOGIN_METHODS, OTP_NAME, OTP_PURPOSE, ORDER_STATUS, PAYMENT_ATTEMPT_STATUS, PAYMENT_COLLECTED_BY, SETTLEMENT_STATUS}

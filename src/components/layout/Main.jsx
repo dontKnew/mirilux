@@ -19,7 +19,7 @@ export default function Main({children}) {
       <StickyHeader>
         <Header />
       </StickyHeader>
-      <CategoryMenu />
+      {/* <CategoryMenu /> */}
         {children}
       <PaymentTrust />
       <Testimonials />

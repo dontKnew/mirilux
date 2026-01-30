@@ -31,7 +31,6 @@ export default function ProductCard({ product}) {
         <h3 className="font-semibold text-sm leading-snug">
           {product.name} - {product.size}
         </h3>
-
         <p className="text-green-600 text-sm mt-2 line-clamp-2">
           {product.long_name}
         </p>

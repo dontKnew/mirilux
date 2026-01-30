@@ -9,7 +9,7 @@ export function baseTemplate({ title, content }) {
   <body style="
     margin:0;
     padding:0;
-    background:#f4f4f4;
+    background:#f16504;
     font-family:Arial, Helvetica, sans-serif;
   ">
     <table width="100%" cellpadding="0" cellspacing="0">

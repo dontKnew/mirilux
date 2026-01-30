@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 const steps = [
   { name: "Order Summary", path: "/checkout/summary" },
   { name: "Order Payment", path: "/checkout/payment" },
-  { name: "Order Invoice", path: "/checkout/success" },
+  { name: "Order Confirmed", path: "/checkout/success" },
 ];
 
 export default function CheckoutStepper() {

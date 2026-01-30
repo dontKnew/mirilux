@@ -13,6 +13,7 @@ import {
 import BrandName from "../ui/BrandName";
 import Link from "next/link";
 import Logo from "../ui/Logo";
+import { WEBSITE } from "@/data/constant";
 
 export default function Footer() {
   return (
@@ -76,9 +77,9 @@ export default function Footer() {
           {/* SUPPORT */}
           <div>
             <FooterTitle link="/support" title="Support" />
-            <FooterLink link="/track-order" text="Track Order" />
-            <FooterLink link="/cancellation-policy" text="Return Policy" />
+            <FooterLink link="/cancellation-policy" text="Cancellation Policy" />
             <FooterLink link="/shipping-policy" text="Shipping Policy" />
+            <FooterLink link="/refund-policy" text="Refund Policy" />
             <FooterLink link="/privacy-policy" text="Privacy Policy" />
             <FooterLink link="/terms-and-conditions" text="Terms & Conditions" />
           </div>
@@ -108,12 +109,12 @@ export default function Footer() {
           <div className="flex md:flex-row flex-col justify-between  gap-4  text-gray-700">
             <div className="flex items-center gap-2 text-gray-700 hover:text-[var(--primary)] transition">
               <Mail size={16} className="text-blue-500" />
-              <span>support@mirilux.com</span>
+              <span>{WEBSITE.EMAIL}</span>
             </div>
 
             <div className="flex items-center gap-2 text-gray-700 hover:text-[var(--secondary)] transition">
               <Phone size={16} className="text-green-600" />
-              <span>+91 98765 43210</span>
+              <span>{WEBSITE.PHONE}</span>
             </div>
 
             <div className="flex items-center gap-2 text-gray-700">
@@ -149,7 +150,7 @@ function FooterTitle({ title }) {
   );
 }
 
-function FooterLink({ text, link="/" }) {
+function FooterLink({ text, link="#" }) {
   return (
     <Link href={link} >
       <p className="text-gray-600 hover:text-[var(--primary)] cursor-pointer mb-3 transition-colors">{text}</p>

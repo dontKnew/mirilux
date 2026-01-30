@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Store, ShoppingCart, Search, HelpCircle, Truck, BookOpen, LogOutIcon } from "lucide-react";
+import { Store, ShoppingCart, Search, HelpCircle, Truck, BookOpen, LogOutIcon, HomeIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useCart as useCartContext } from "@/context/CartContext";
@@ -63,15 +63,13 @@ export default function Header() {
   }, [charIndex, isDeleting, wordIndex]);
 
   return (
-    <div className="bg-white">
-      <div className="mx-2 md:mx-auto relative md:top-0 h-[100px] md:h-fit -top-[15px]  md:max-w-7xl md:px-4 px-0 flex md:flex-row flex-col md:items-center items-start justify-between md:gap-5 gap-0">
-
-        {/* Logo */}
+    <div className="bg-white border-b border-gray-200 shadow-sm">
+      <div className="mx-2 md:mx-auto relative md:top-0 h-[60px] md:h-fit -top-[15px]  md:max-w-7xl md:px-4 px-0 flex md:flex-row flex-col md:items-center items-start justify-between md:gap-5 gap-0">
         <div>
           <Logo />
           <div className="md:hidden block w-fit absolute top-[32px] right-[11px]">
               <div className="flex gap-4">
-                  <Link href="/shop"><Icon Icon={Store} /></Link>
+                  <Link href="/"><Icon Icon={HomeIcon} /></Link>
                   <div onClick={() => setIsOpen(true)}><Icon Icon={ShoppingCart} count={totalCartitems} /></div>
               </div>
           </div>
@@ -79,7 +77,7 @@ export default function Header() {
 
 
         {/* Search */}
-        <div className="flex flex-1 w-full justify-center md:mb-0 mb-1">
+        <div className="md:flex hidden flex-1 w-full justify-center md:mb-0 mb-1">
           <div className="relative w-full max-w-lg">
             <Search
               size={18}
@@ -104,7 +102,7 @@ export default function Header() {
 
         {/* Icons */}
         <div className="hidden md:flex items-center gap-8">
-          <Link href="/shop"><Icon label="Shop" Icon={Store} /></Link>
+          <Link href="/"><Icon label="Home" Icon={HomeIcon} /></Link>
           <div onClick={() => setIsOpen(true)} ><Icon label="Cart" Icon={ShoppingCart} count={totalCartitems} /> </div>
           <Link href="/track-order"><Icon label="Track" Icon={Truck} /></Link>
           <Link href="/help"><Icon label="Help" Icon={HelpCircle} /></Link>

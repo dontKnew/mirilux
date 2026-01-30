@@ -8,6 +8,11 @@ export class ProductService {
         return products;
     }
 
+    static async getProduct(value, key = 'id') {
+        const product = Products.find((p) => p[key] === value);
+        return product;
+    }
+
     /* cartItems: [{ id: 12, qty: 3 }] */
 
     async getProductByCartItems(cartItems = []) {

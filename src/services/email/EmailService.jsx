@@ -1,6 +1,7 @@
 import nodemailer from "nodemailer";
 import { otpTemplate } from "./templates/otpTemplate";
 import { resetPasswordTemplate } from "./templates/resetPasswordTemplate";
+import { orderDetailsTemplate } from "./templates/orderDetailsTemplate";
 
 class EmailService {
   static transporter = null;
@@ -36,12 +37,12 @@ class EmailService {
     }
   }
 
-  // OTP Email
+
+
   static async sendOTP(to, otp ) {
      if (!to) {
       throw new Error("Recipient email missing for OTP");
     }
-
     if (!otp) {
       throw new Error("OTP is required");
     }
@@ -52,7 +53,21 @@ class EmailService {
     });
   }
 
-  // Password Reset Email
+  static async sendOrderDetails(email, orderDetails ) {
+     if (!email) {
+      throw new Error("Recipient email missing for Order Details");
+    }
+    if (!orderDetails) {
+      throw new Error("Order Details is required");
+    }
+    return await this.send({
+      to:email,
+      subject: "New Order Placed 🎉",
+      html: orderDetailsTemplate({order:orderDetails}),
+    });
+  }
+
+
   static async sendPasswordReset({ to, link }) {
     return await this.send({
       to,

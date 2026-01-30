@@ -38,9 +38,7 @@ export default function ShippingSupport() {
               <a
                 href="https://wa.me/919876543210"
                 target="_blank"
-                className="flex w-[150px] items-center gap-2 px-5 py-2.5 rounded-md
-                           bg-green-500 text-white font-medium
-                           hover:bg-green-600 transition"
+                className={`flex w-[150px] items-center gap-2 px-5 py-2.5 rounded-md bg-green-500 text-white font-medium hover:bg-green-600 transition`}
               >
                 <MessageCircle size={18} />
                 WhatsApp
@@ -48,9 +46,7 @@ export default function ShippingSupport() {
 
               <a
                 href="tel:+919876543210"
-                className="w-[150px] justify-center flex items-center gap-2 px-5 py-2.5 rounded-md
-                           border-2 border-[var(--primary)] text-orange-600
-                           hover:bg-[var(--primary)] hover:text-white transition"
+                className={`w-[150px] justify-center flex items-center gap-2 px-5 py-2.5 rounded-md border-2 border-[var(--primary)] text-orange-600 hover:bg-[var(--primary)] hover:text-white transition`}
               >
                 <Phone size={18} />
                 Call Us

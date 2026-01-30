@@ -2,9 +2,10 @@
 */
 import DB from "@/lib/Database";
 import { ProductService } from "./ProductService";
-import addValueToObject from "@/utils/array";
+import addValueToObject, { formatDateToIST } from "@/utils/array";
 import crypto from "crypto";
 import { ORDER_STATUS, ORDER_STATUS_MESSAGE } from "@/data/constant";
+import { OrderPaymentService } from "./OrderPaymentService";
 export class OrderService {
   #table;
   user;
@@ -45,6 +46,46 @@ export class OrderService {
       }
     }
     return true;
+  }
+
+
+  /* 
+// Main Data, thats should include
+{
+  total_amount@order_amount,
+  order_date:,
+  order_status:Confirmed, // Latest OrderStatus()
+  payment_method:COD // Last Payment Method
+  order_items:array, 
+  order_address:array,
+  order_tracking:array,
+  user:array // who created the order & send email to this user
+}
+  */
+  async getOrderFull(value, key="order_number"){
+    const order = await this.getOrder(value, key);
+    if(!order){
+      throw new Error("Order not found");
+    }
+    order.order_date = formatDateToIST(order.order_date);
+    const orderItems = await DB.table("order_items").where("order_id", "=", order.id).get();
+    const orderAddress = await DB.table("order_addresses").where("order_id", "=", order.id).first();
+    const orderTracking = await DB.table("order_tracking").where("order_id", "=", order.id).orderBy("datetime", "ASC").get();
+    const user = await DB.table("users").where("id", "=", order.user_id).first();
+    const {status, message} = await this.getLastOrderStatus(order.id);
+    order.order_status = status;
+    order.order_status_message = message;
+    const orderPaymentService = new OrderPaymentService();
+    const payment = await orderPaymentService.getLastPaymentStatus(order.id);
+    order.payment_method = payment ? payment.payment_method : null;
+    order.payment_status = payment ? payment.payment_status : null;
+    return {
+      ...order,
+      order_items:orderItems,
+      order_address:orderAddress,
+      order_tracking:orderTracking,
+      user:user,
+    };
   }
 
   getProductsPriceData(cartProducts, option={}){
@@ -88,7 +129,6 @@ export class OrderService {
       console.warn("last order id not found");
       return null;
     }
-    console.warn(lastOrder, "last orderid");
     let address = await DB.table("order_addresses").select("full_name, email, phone_no, address_line, city, state, pincode, country").where("order_id", "=", lastOrder.id).orderBy("id", "DESC").first();
     return address ;
   }
@@ -164,7 +204,7 @@ getOrderNumber(order_id) {
   // Ensure at least 2 digits (01, 02, 10, 123...)
   const paddedOrderId = String(order_id).padStart(2, "0");
 
-  return `${prefix}-${first4Letters}-${paddedOrderId}`;
+  return `${prefix}-${first4Letters}${paddedOrderId}`;
 }
 
 

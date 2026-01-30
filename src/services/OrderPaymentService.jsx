@@ -1,7 +1,8 @@
 import DB from "@/lib/Database";
 import { OrderService } from "./OrderService";
 
-import { PAYMENT_METHOD, PAYMENT_STATUS, PAYMENT_COLLECTED_BY, ORDER_STATUS, ORDER_STATUS_MESSAGE, PAYMENT_ATTEMPT_STATUS, COLLECTION_STATUS } from "@/data/constant";
+import { PAYMENT_METHOD, PAYMENT_STATUS, PAYMENT_COLLECTED_BY, ORDER_STATUS, ORDER_STATUS_MESSAGE, PAYMENT_ATTEMPT_STATUS, COLLECTION_STATUS, WEBSITE } from "@/data/constant";
+import EmailService from "./email/EmailService";
 
 
 export class OrderPaymentService{
@@ -31,8 +32,17 @@ export class OrderPaymentService{
       if(isExists){
         throw new Error("Payment COD already created");
       }
+
       const result =  this.#createPayment(insertData);
-      (new OrderService).updateOrderTracking(this.order.id, ORDER_STATUS.CONFIRMED, ORDER_STATUS_MESSAGE.CONFIRMED);
+      const orderSevice = new OrderService();
+      orderSevice.updateOrderTracking(this.order.id, ORDER_STATUS.CONFIRMED, ORDER_STATUS_MESSAGE.CONFIRMED);
+      
+      // Send Order Details Email
+      const order = await orderSevice.getOrderFull(this.order.id, 'id');
+      const emailResult = await EmailService.sendOrderDetails(order.user.email, order);
+      const adminEmail = WEBSITE.ADMIN_EMAIL;
+      const adminEmailResult = await EmailService.sendOrderDetails(adminEmail, order);
+
       return result;
   } 
 
@@ -50,6 +60,18 @@ export class OrderPaymentService{
       throw new Error("Payment could not created")
     }
     return result;
+  }
+
+  
+   async getLastPaymentStatus(order_id){
+    if(!order_id){
+      throw new Error("Order id is required");
+    }
+      const payment = await DB.table(this.#table).where("order_id","=", order_id).orderBy("id", "DESC").first();
+      if(!payment){
+        return null;
+      }
+      return {payment_status:payment.collection_status, payment_method:payment.payment_method};
   }
   
 }

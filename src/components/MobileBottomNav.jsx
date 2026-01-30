@@ -8,15 +8,31 @@ import {
   Tag,
   HelpCircle,
   Truck,
+  LogOut,
 } from "lucide-react";
+import { useGlobalState } from "@/lib/useGlobalState";
+import AuthClientService from "@/services/AuthClientService";
+import { useToast } from "./ui/toast/ToastProvider";
 
 export default function MobileBottomNav() {
   const pathname = usePathname();
+  const {hasAuth} = useGlobalState();
+  const {showToast} = useToast()
 
+  const logoutUser = async  ()=>{
+    try {
+      const result = await AuthClientService.logout();
+      showToast(result, "success");
+    }catch(e){
+      showToast(e.message)
+    }
+  }
+
+    // {hasAuth && <div onClick={async ()=>{logoutUser()}} ><Icon label="Logout" Icon={LogOutIcon} /></div> }
   const items = [
     { name: "Home", icon: Home, href: "/" },
-    { name: "Categories", icon: Grid, href: "/category" },
-    { name: "Offers", icon: Tag, href: "/offers" },
+    // { name: "Categories", icon: Grid, href: "/category" },
+    // { name: "Offers", icon: Tag, href: "/offers" },
     { name: "Track", icon: Truck, href: "/track-order" },
     { name: "Help", icon: HelpCircle, href: "/help" },
   ];
@@ -39,35 +55,51 @@ export default function MobileBottomNav() {
                 <Icon
                   size={24}
                   strokeWidth={1.6}
-                  className={`transition-transform scale-110 ${
-                    isActive
+                  className={`transition-transform scale-110 ${isActive
                       ? "text-[var(--primary)]"
                       : "text-[var(--secondary)]"
-                  }`}
+                    }`}
                 />
 
                 <span
-                  className={`text-[12px] font-medium ${
-                    isActive
+                  className={`text-[12px] font-medium ${isActive
                       ? "text-[var(--primary)]"
                       : "text-[var(--secondary)]"
-                  }`}
+                    }`}
                 >
                   {name}
                 </span>
 
                 {/* Active indicator */}
                 <span
-                  className={`mt-1 h-[2px] w-6 rounded-full transition-all ${
-                    isActive
+                  className={`mt-1 h-[2px] w-6 rounded-full transition-all ${isActive
                       ? "bg-[var(--primary)]"
                       : "bg-transparent"
-                  }`}
+                    }`}
                 />
               </div>
             </Link>
           );
         })}
+
+           {hasAuth && (
+          <button
+            onClick={logoutUser}
+            className="flex-1"
+          >
+            <div className="flex flex-col items-center justify-center gap-0.5 py-2 active:bg-gray-100 transition-colors">
+              <LogOut
+                size={24}
+                strokeWidth={1.6}
+                className="scale-110 text-red-500"
+              />
+              <span className="text-[12px] font-medium text-red-500">
+                Logout
+              </span>
+              <span className="mt-1 h-[2px] w-6 rounded-full bg-transparent" />
+            </div>
+          </button>
+        )}
 
       </div>
     </nav>

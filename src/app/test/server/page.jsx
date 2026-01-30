@@ -1,27 +1,38 @@
 import DB from "@/lib/Database";
 import { AuthService } from "@/services/AuthService";
 import EmailService from "@/services/email/EmailService";
+import { orderDetailsTemplate } from "@/services/email/templates/orderDetailsTemplate";
 import { OrderService } from "@/services/OrderService";
 import { OtpService } from "@/services/OtpService";
 import { PincodeService } from "@/services/PincodeService";
 import EncryptorService from "@/services/security/EncryptorService";
 import HasherService from "@/services/security/HasherService";
 import { UserService } from "@/services/UserService";
+import { printJson } from "@/utils/array";
 
 export default async function Page() {
 
-    const userService = new UserService();
-    const orderService = new OrderService();
-    const cartAddress = {
-        full_name:"Krishan",
-        phone_no:"1271982712",
-        email:"krishan@gmail.com",
-        address_line:"House No. 702, Gali No. 11",
-        state:"Delhi", city:"Dwarka", pincode:11002, country:"India"
-    }
-    orderService.user = await userService.getUser(49, "id");
-    const response = await orderService.createCartOrder(cartAddress, [{id:1, qty:2}, { id:2, qty:3}]);
-    return JSON.stringify({response});
+
+    // Render HTML
+    // const orderSevice = new OrderService();
+    // const order = await orderSevice.getOrderFull('OD-SAJI-103');
+    // const orderHtml = orderDetailsTemplate({ order });
+    // return <div className="max-w-3xl mx-auto bg-white shadow rounded" dangerouslySetInnerHTML={{ __html: orderHtml }} />
+
+
+
+    // const userService = new UserService();
+    // const orderService = new OrderService();
+    // const cartAddress = {
+    //     full_name:"Krishan",
+    //     phone_no:"1271982712",
+    //     email:"krishan@gmail.com",
+    //     address_line:"House No. 702, Gali No. 11",
+    //     state:"Delhi", city:"Dwarka", pincode:11002, country:"India"
+    // }
+    // orderService.user = await userService.getUser(49, "id");
+    // const response = await orderService.createCartOrder(cartAddress, [{id:1, qty:2}, { id:2, qty:3}]);
+    // return JSON.stringify({response});
 
     // const input = 4544;
     // const input_hash = HasherService.hash(input);
@@ -48,13 +59,15 @@ export default async function Page() {
 
 
     
-    // try {
-    //     const result = await EmailService.sendOTP("sajid.rapidexworldwide@gmail.com", 333123);
-    //     return JSON.stringify(result, null, 2);
-    // }catch(e){
-    //     const result = e;
-    //     return JSON.stringify(result);
-    // }
+    try {
+        const orderSevice = new OrderService();
+        const order = await orderSevice.getOrderFull('OD-SAJI-103');
+        const result = await EmailService.sendOrderDetails(order);
+        return printJson(result);
+    }catch(e){
+        console.warn(e);
+        return printJson(e);
+    }
 
 
     // const pincodeService = await PincodeService.getLocationFromPincode(110037);
