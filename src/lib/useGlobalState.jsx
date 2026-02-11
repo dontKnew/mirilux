@@ -15,19 +15,18 @@ export const useGlobalState = create((set, get) => ({
   cartAddress: EMPTY_ADDRESS,
 
   hasAuth: false,
+  hasAuthChecked:false,
   authUser: null,
 
-  setCartAddress: (cartAddress) =>
-    set({ cartAddress }),
+  setHasAuthChecked:(value)=>set({hasAuthChecked:value}),
+  setCartAddress: (cartAddress) => set({ cartAddress }),
 
-  clearCartAddress: () =>
-    set({ cartAddress: EMPTY_ADDRESS }),
+  clearCartAddress: () => set({ cartAddress: EMPTY_ADDRESS }),
 
-  setAuthUser: (authUser) =>
-    set({ hasAuth: true, authUser }),
+  setAuthUser: (authUser) => set({ hasAuth: true, authUser }),
   
   isCartAddress:()=>{
-      const { cartAddress } = get();
+    const { cartAddress } = get();
      for (const [key, value] of Object.entries(cartAddress)) {
         if (!value || value=="") {
           return true;

@@ -7,13 +7,15 @@ import {Wallet, Smartphone, QrCode, CreditCard, Building2, Lock, ChevronDown, Se
 import useApiRequest from "@/hooks/useApiRequest";
 import { useToast } from "@/components/ui/toast/ToastProvider";
 import { useParams, useRouter } from "next/navigation";
-import { PAYMENT_METHOD } from "@/data/constant";
+import { PAYMENT_COLLECTED_BY, PAYMENT_METHOD } from "@/data/constant";
 import ButtonLoader from "@/components/ui/buttons/ButtonLoader";
+import Script from 'next/script';
+
 
 export default function Page() {
   const [selected, setSelected] = useState(null);
-  const [upiTab, setUpiTab] = useState("apps");
   const [priceData, setPriceData] = useState();
+  const [gatewayOrder, setGatewayOrder] = useState();
   const {data, send, send2, error, loading, setLoading} = useApiRequest();
   const {showToast} = useToast();
   const {token} = useParams();
@@ -35,11 +37,23 @@ export default function Page() {
         showToast("Order token not found");
         return ; 
       }
+      if(gatewayOrder){
+          processRazorPayment(gatewayOrder);
+      }
       setLoading(true);
       try {
-        const response = await send2("/auth/order/payment", {payment_method:PAYMENT_METHOD.COD, order_token:token});
-        showToast("Order placed successfully!", "success");
-        router.push("/checkout/success/"+token)
+        const response = await send2("/auth/order/payment", {payment_method:selected, order_token:token});
+        if(!response){
+            showToast("Something is wrong, Try again!");
+        }
+        if(response.payment_method==PAYMENT_METHOD.COD){
+            showToast("Order placed successfully!", "success");
+            router.push("/checkout/success/"+token)
+          }else{
+            setGatewayOrder(response);
+            showToast("Payment Processing...", "success");
+            await processRazorPayment(response);
+          }
       }catch(err){
         showToast(err.message);
       }finally{
@@ -52,22 +66,82 @@ export default function Page() {
       showToast(error)
     }
     if(data){
-      // showToast("Payment Fetched..", "success")
-      setPriceData(data.priceData); 
+      if(data.has_paid){
+          showToast("Order payment already paid", "success");
+          router.push("/checkout/success/"+token) 
+      }else {
+        setPriceData(data.priceData);  
+      }
     }
   }, [data, error])
 
+const verifyPaymentStatus = async (responeData)=>{
+  // const responeData =  {razorpay_payment_id: 'pay_SAsPDM4eTPHNb5', razorpay_order_id: 'order_SAs7n1BWWTVRpc', razorpay_signature: '56d4d5b233f4800adb5b3e7b88d6d17165651d224457674b6ad903557b871797'};
+    try {
+      await send2("/auth/order/payment/verify", {order_token:token, collected_by:PAYMENT_COLLECTED_BY.RAZOREPAY, gateway_response:responeData})
+      showToast("Order placed successfully!", "success");
+      router.push("/checkout/success/"+token)
+    }catch(e){
+      const message_error = e?.message ||  "Something is wrong";
+      showToast(message_error);
+    }
+}
+
+const processRazorPayment = async (order) => {
+    let method = order?.payment_method.toLowerCase();
+    method = method.replace(" ", "");
+    const options = {
+      key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+      amount: order.amount,
+      currency: order.currency,
+      name: "MiriLuxe",
+      order_id: order.order_id_gateway,
+      handler: async function (response) {
+        showToast("We are verifying payment status");
+        // {razorpay_payment_id: 'pay_SAsPDM4eTPHNb5', razorpay_order_id: 'order_SAs7n1BWWTVRpc', razorpay_signature: '56d4d5b233f4800adb5b3e7b88d6d17165651d224457674b6ad903557b871797'}
+        await verifyPaymentStatus(response);
+      },
+      config: {
+        display: {
+          blocks: {
+            banks: {
+              name: "MiriLux Gateway",
+              instruments: [
+                {
+                  method: method
+                },
+              ],
+            },
+          },
+          sequence: ["block.banks"],
+          preferences: { show_default_blocks: false },
+        },
+      },
+
+      modal: {
+        ondismiss: function () {
+          // alert("Payment popup closed");
+        }
+      }
+    };
+    const paymentObject = new window.Razorpay(options);
+    paymentObject.on('payment.failed', function (response) {
+      console.warn(response, "payment failed");
+    });
+    paymentObject.open();
+  };
+
+
   return (
     <div className="grid md:grid-cols-3 gap-3">
+      <Script src="https://checkout.razorpay.com/v1/checkout.js" />
       {/* LEFT */}
       <div className="md:col-span-2 bg-white rounded-xl md:p-4 space-y-4 md:mt-0 mt-4">
         <h2 className="text-lg font-semibold">Choose Payment Method</h2>
 
-        
-        {/* ================== COD ================== */}
         <Accordion
-          open={selected === "cod"}
-          onClick={() => handleToggle("cod")}
+          open={selected === PAYMENT_METHOD.COD}
+          onClick={() => handleToggle(PAYMENT_METHOD.COD)}
           icon={<Wallet className="text-green-600" />}
           title="Cash on Delivery"
         >
@@ -77,78 +151,42 @@ export default function Page() {
           </>
         </Accordion>
 
-        {/* ================== CARD (Disabled) ================== */}
-        <DisabledRow icon={<CreditCard />} title="UPI (Recommended)" />
-
-        {/* ================== UPI ================== */}
-        {/* <Accordion
-          open={selected === "upi"}
-          onClick={() => handleToggle("upi")}
-          icon={<Wallet className="text-orange-500" />}
-          title="UPI (Recommended)"
-          subtitle="Pay with any UPI app"
+        <Accordion
+          open={selected === PAYMENT_METHOD.UPI}
+          onClick={() => handleToggle(PAYMENT_METHOD.UPI)}
+          icon={<Wallet className="text-green-600" />}
+          title="UPI ( Recommended )"
         >
-          <div className="text-sm text-green-700 bg-green-50 px-3 py-2 rounded-lg">
-            ✔ Secure payment • Supports all UPI apps
-          </div>
+          <>
+          <p className="text-sm text-gray-500">Make Payment Online to Confirm Order</p>
+          <ButtonLoader handleClick={handlePlaceOrder}  loading={loading} className="w-full" buttonColor="primary" textIcon={<ArrowRightCircle className="h-5" />} text={`Pay Now ₹ ${priceData?.total_amount}`} />
+          </>
+        </Accordion>
 
-          <div className="flex gap-3 mt-3">
-            <Tab active={upiTab === "apps"} onClick={() => setUpiTab("apps")}>
-              UPI Apps
-            </Tab>
-            <Tab active={upiTab === "qr"} onClick={() => setUpiTab("qr")}>
-              QR Code
-            </Tab>
-          </div>
+        <Accordion
+          open={selected === PAYMENT_METHOD.CARD}
+          onClick={() => handleToggle(PAYMENT_METHOD.CARD)}
+          icon={<Wallet className="text-green-600" />}
+          title="Debit / Credit / ATM Card"
+        >
+          <>
+          <p className="text-sm text-gray-500">Make Payment Online to Confirm Order</p>
+          <ButtonLoader handleClick={handlePlaceOrder}  loading={loading} className="w-full" buttonColor="primary" textIcon={<ArrowRightCircle className="h-5" />} text={`Pay Now ₹ ${priceData?.total_amount}`} />
+          </>
+        </Accordion>
 
-          <AnimatePresence mode="wait">
-            {upiTab === "apps" && (
-              <motion.div
-                key="apps"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                className="grid grid-cols-3 gap-4 mt-4"
-              >
-                <UPIApp label="PhonePe" />
-                <UPIApp label="Google Pay" />
-                <UPIApp label="Paytm" />
-              </motion.div>
-            )}
-
-            {upiTab === "qr" && (
-              <motion.div
-                key="qr"
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                className="flex flex-col items-center mt-4 gap-2"
-              >
-                <div className="w-40 h-40 bg-gray-100 rounded-xl flex items-center justify-center">
-                  <QrCode size={70} className="text-gray-400" />
-                </div>
-                <p className="text-sm text-gray-500">
-                  Scan using any UPI app
-                </p>
-              </motion.div>
-            )}
-          </AnimatePresence>
-
-          <Link
-            href="/checkout/success"
-            className="block mt-5 w-full text-center bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-lg font-medium"
-          >
-            Pay Now ₹1,515
-          </Link>
-        </Accordion> */}
-
+        <Accordion
+          open={selected === PAYMENT_METHOD.NET_BANKING}
+          onClick={() => handleToggle(PAYMENT_METHOD.NET_BANKING)}
+          icon={<Wallet className="text-green-600" />}
+          title="Net Banking"
+        >
+          <>
+          <p className="text-sm text-gray-500">Make Payment Online to Confirm Order</p>
+          <ButtonLoader handleClick={handlePlaceOrder}  loading={loading} className="w-full" buttonColor="primary" textIcon={<ArrowRightCircle className="h-5" />} text={`Pay Now ₹ ${priceData?.total_amount}`} />
+          </>
+        </Accordion>
         
-        {/* ================== CARD (Disabled) ================== */}
-        <DisabledRow icon={<CreditCard />} title="Debit / Credit / ATM Card" />
-
-        {/* ================== NET BANKING (Disabled) ================== */}
-        <DisabledRow icon={<Building2 />} title="Net Banking" />
-
       </div>
 
       {/* RIGHT */}
@@ -160,7 +198,6 @@ export default function Page() {
 }
 
 /* ================== Components ================== */
-
 function Accordion({ open, onClick, icon, title, subtitle, children }) {
   return (
     <div className={`border rounded ${open && "border-orange-500"}`}>
@@ -237,3 +274,4 @@ function DisabledRow({ icon, title }) {
     </div>
   );
 }
+

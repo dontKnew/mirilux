@@ -4,11 +4,8 @@ export function orderDetailsTemplate({ order }) {
   console.warn("Generating order details email for order:", order);
   const address = order.order_address;
   const items = order.order_items || [];
-
-  const paymentBadge =
-    order.payment_status === "Paid"
-      ? `<span style="background:#dcfce7;color:#166534;">Paid</span>`
-      : `<span style="background:#fee2e2;color:#991b1b;">${order.payment_status}</span>`;
+  
+  const paymentBadge = `<span style="background:#dcfce7;color:#166534;">${order.payment_method}</span>`
 
   return baseTemplate({
     title: "New Order Placed 🎉",

@@ -1,5 +1,5 @@
 import ApiHandler from "@/lib/ApiHandler";
-export async function POST() {
-  const api = new ApiHandler();
+export async function POST(req) {
+  const api = new ApiHandler(req);
   return api.responsePublicKey();
 }

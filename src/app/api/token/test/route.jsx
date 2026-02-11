@@ -14,21 +14,21 @@ export async function GET(req) {
   let decryptedDataByAesKey;
   const server = new EncryptedServer();
   try {
-    // const aesKey = await server.generateAesKey();
-    // const jsonPayload = ['1', '2', '3', '4', '5'];
-    // const encryptedDataByAesKey = server.encryptAes(jsonPayload, aesKey);    
-    // const encryptedAesKey = server.encryptAesKey(aesKey);
-    // const data = encryptedDataByAesKey + "." + encryptedAesKey;
-    // const clientBody = { token: data };
+    const aesKey = await server.generateAesKey();
+    const jsonPayload = ['1', '2', '3', '4', '5'];
+    const encryptedDataByAesKey = server.encryptAes(jsonPayload, aesKey);    
+    const encryptedAesKey = server.encryptAesKey(aesKey);
+    const data = encryptedDataByAesKey + "." + encryptedAesKey;
+    const clientBody = { token: data };
 
-    // const decryptRespose = server.decryptResponse(clientBody);
+    const decryptRespose = server.decryptResponse(clientBody);
 
-    // const decryptedAesKey = server.decryptAesKey(encryptedAesKey);
-    // const decryptedDataByAesKey = server.decryptAes(encryptedDataByAesKey, decryptedAesKey);
+    const decryptedAesKey = server.decryptAesKey(encryptedAesKey);
+    const decryptedDataByAesKey = server.decryptAes(encryptedDataByAesKey, decryptedAesKey);
 
-    // const serverEncryptedJsonResponse = server.responseSuccess(jsonPayload, "server Response Encrypted");
-    // const serverEncryptedResponse = JSON.parse(serverEncryptedJsonResponse);
-    // const serverDecryptedResponse = server.decryptAes(serverEncryptedResponse.token, aesKey);
+    const serverEncryptedJsonResponse = server.responseSuccess(jsonPayload, "server Response Encrypted");
+    const serverEncryptedResponse = JSON.parse(serverEncryptedJsonResponse);
+    const serverDecryptedResponse = server.decryptAes(serverEncryptedResponse.token, aesKey);
 
     return NextResponse.json({
         success: true,

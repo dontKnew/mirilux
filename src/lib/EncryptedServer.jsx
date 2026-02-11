@@ -7,7 +7,7 @@ class EncryptedServer {
   privateKey;
   publicKey;
 
-  
+
   constructor(
     privateKeyPath = "private.pem",
     publicKeyPath = "public.pem"
@@ -16,6 +16,22 @@ class EncryptedServer {
     // this.publicKey = fs.readFileSync(publicKeyPath, "utf8");
     this.privateKey = process.env.PRIVATE_KEY;
     this.publicKey = process.env.PUBLIC_KEY;
+    this.publicKey = this.#toPemPublicKey(this.publicKey);
+    this.privateKey = this.#toPemPrivateKey(this.privateKey);
+  }
+
+  #toPemPrivateKey(base64Key) {
+    const clean = base64Key.replace(/\s+/g, "");
+    const lines = clean.match(/.{1,64}/g).join("\n");
+    return `-----BEGIN PRIVATE KEY-----\n${lines}\n-----END PRIVATE KEY-----`;
+  }
+
+
+  #toPemPublicKey(base64Key) {
+    const clean = base64Key.replace(/\s+/g, "");
+    const lines = clean.match(/.{1,64}/g).join("\n");
+
+    return `-----BEGIN PUBLIC KEY-----\n${lines}\n-----END PUBLIC KEY-----`;
   }
 
   /* ================= PUBLIC KEY ================= */
@@ -27,47 +43,47 @@ class EncryptedServer {
   }
 
   /* ================= RSA ================= */
-decryptAesKey(encryptedBase64) {
-  const encrypted = Buffer.from(encryptedBase64, "base64");
+  decryptAesKey(encryptedBase64) {
+    const encrypted = Buffer.from(encryptedBase64, "base64");
 
-  try {
-    const key = crypto.privateDecrypt(
-      {
-        key: this.privateKey,
-        padding: crypto.constants.RSA_PKCS1_OAEP_PADDING,
-        oaepHash: "sha256",
-      },
-      encrypted
-    );
+    try {
+      const key = crypto.privateDecrypt(
+        {
+          key: this.privateKey,
+          padding: crypto.constants.RSA_PKCS1_OAEP_PADDING,
+          oaepHash: "sha256",
+        },
+        encrypted
+      );
 
-    if (key.length !== 32) {
-      throw new Error("Invalid AES key length");
+      if (key.length !== 32) {
+        throw new Error("Invalid AES key length");
+      }
+
+      return key;
+    } catch (e) {
+      console.warn("RSA decrypt failed:", e.message);
+      throw new Error("RSA decrypt failed : " + e.message);
     }
-
-    return key;
-  } catch (e) {
-    console.warn("RSA decrypt failed:", e.message);
-    throw new Error("RSA decrypt failed : " + e.message);
   }
-}
 
 
-encryptAesKey(aesKeyBuffer) {
-  try {
-    const encrypted = crypto.publicEncrypt(
-      {
-        key: this.publicKey,
-        padding: crypto.constants.RSA_PKCS1_OAEP_PADDING,
-        oaepHash: "sha256",
-      },
-      aesKeyBuffer // Buffer (32 bytes)
-    );
+  encryptAesKey(aesKeyBuffer) {
+    try {
+      const encrypted = crypto.publicEncrypt(
+        {
+          key: this.publicKey,
+          padding: crypto.constants.RSA_PKCS1_OAEP_PADDING,
+          oaepHash: "sha256",
+        },
+        aesKeyBuffer // Buffer (32 bytes)
+      );
 
-    return encrypted.toString("base64");
-  } catch (err) {
-    throw new Error("RSA_ENCRYPTION_FAILED");
+      return encrypted.toString("base64");
+    } catch (err) {
+      throw new Error("RSA_ENCRYPTION_FAILED:" + err);
+    }
   }
-}
 
 
   /* ================= AES ================= */
@@ -77,7 +93,7 @@ encryptAesKey(aesKeyBuffer) {
   */
   decryptAes(encryptedBase64, aesKey) {
     if (aesKey.length !== 32) {
-        throw new Error("Invalid AES key length");
+      throw new Error("Invalid AES key length");
     }
     const raw = Buffer.from(encryptedBase64, "base64");
     const iv = raw.subarray(0, 12);

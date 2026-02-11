@@ -1,0 +1,123 @@
+"use client";
+
+import { useState } from "react";
+import { X, AlertCircle, CheckCircle } from "lucide-react";
+
+export default function FloatingTextarea({
+  label,
+  value = "",
+  onChange,
+  icon: Icon,
+  error,
+  success = false,
+  readOnly = false,
+  rows = 5,
+}) {
+
+  const [focused, setFocused] = useState(false);
+
+  if (value == null) value = "";
+
+  const isActive = focused || value;
+
+  const borderColor = error
+    ? "border-red-500"
+    : success
+      ? "border-green-700"
+      : focused
+        ? "border-[var(--secondary)]"
+        : "border-gray-300";
+
+  const iconColor = error
+    ? "text-red-500"
+    : success
+      ? "text-green-700"
+      : focused
+        ? "text-[var(--secondary)]"
+        : "text-gray-500";
+
+  return (
+    <div className="relative w-full">
+
+      {/* Textarea wrapper */}
+      <div
+        className={`relative rounded border-2 px-3 py-2 transition-all ${borderColor}`}
+      >
+        {/* Left icon */}
+        {Icon && (
+          <Icon
+            size={18}
+            className={`absolute left-2 top-4 z-10 ${iconColor}`}
+          />
+        )}
+
+        <textarea
+          rows={rows}
+          value={value}
+          onChange={readOnly ? undefined : onChange}
+          readOnly={readOnly}
+          onFocus={() => setFocused(true)}
+          onBlur={() => setFocused(false)}
+          className={`w-full bg-transparent outline-none text-gray-800 resize-none
+            ${Icon ? "pl-6" : ""}
+            pt-0
+          `}
+        />
+
+        {/* Success icon */}
+        {success && !error && (
+          <CheckCircle
+            size={18}
+            className="absolute right-4 top-4 text-green-700 z-10"
+          />
+        )}
+
+        {/* Clear button */}
+        {value && !error && !readOnly && !success && (
+          <button
+            type="button"
+            onClick={() => onChange({ target: { value: "" } })}
+            className="absolute right-4 top-4 z-10"
+          >
+            <X size={16} className="text-gray-500" />
+          </button>
+        )}
+
+        {/* Error icon */}
+        {error && (
+          <AlertCircle
+            size={18}
+            className="absolute right-4 top-4 text-red-500 z-10"
+          />
+        )}
+      </div>
+
+      {/* Floating Label */}
+      <label
+        className={`absolute px-1 bg-white pointer-events-none z-20 transition-all
+        ${isActive
+            ? "-top-2 left-4 text-xs"
+            : "left-[40px] top-3"
+          }
+        ${error
+            ? "text-red-500"
+            : success
+              ? "text-green-700"
+              : isActive
+                ? "text-[var(--secondary)]"
+                : "text-gray-400"
+          }
+        `}
+      >
+        {label}*
+      </label>
+
+      {/* Error text */}
+      {error && (
+        <p className="mt-1 text-xs text-red-500">
+          {error}
+        </p>
+      )}
+    </div>
+  );
+}

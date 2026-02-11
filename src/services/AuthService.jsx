@@ -7,7 +7,6 @@ import { LOGIN_METHODS } from "@/data/constant";
 
 export class AuthService {
     #userService;
-
     constructor() {
         this.#userService = new UserService();
     }
@@ -100,7 +99,6 @@ export class AuthService {
             return false;
         }
     }
-
 
     #generateRefreshToken(user_id) {
         const data = {user_id:user_id};

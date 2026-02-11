@@ -14,7 +14,14 @@ export class UserService {
       userData.deliveryAddress = await this.#getDeliveryAddress(userData);
     }
     return userData;
-    
+  }
+
+  async getTable({page, limit, search}){
+    return await DB.table(this.#table).whereAnyLike(['id', 'phone_no', 'full_name', 'email'], search).orderBy("id", "DESC").paginate(page, limit)
+  }
+  
+  async count(){
+    return await DB.table(this.#table).count();
   }
 
   async #getDeliveryAddress(userData){    
@@ -60,9 +67,19 @@ export class UserService {
     return user.user_id;
   }
 
-  async deleteUser(value, key){
-    return await DB.table(this.#table).where(key, "=", value).delete();
-  }
+   async delete(value, key = 'id') {
+    const ref = DB.table(this.#table);
+    if (Array.isArray(value)) {
+        if (value.length > 0) {
+            ref.whereIn(key, value);
+        } else {
+            throw new Error("Value is required");
+        }
+    } else {
+        ref.where(key, "=", value);
+    }
+    return await ref.delete();
+}
 
   async #createAddress(user) {
     const inserData = {

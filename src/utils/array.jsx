@@ -1,3 +1,5 @@
+import { pageData } from "@/data/admin/pageData";
+
 export default function addValueToObject(arrayObjects, objectRow) {
     return arrayObjects.map(obj => ({
         ...obj,
@@ -73,3 +75,11 @@ export function formatDateToIST(
   }).format(date);
 }
 
+
+export function getPageData(pathName) {
+  const data = pageData;
+
+  const result = data.find((item) => item.href === pathName);
+  
+  return result || null; // Agar undefined hai to null return karega
+}

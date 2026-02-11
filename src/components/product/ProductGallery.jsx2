@@ -1,0 +1,16 @@
+"use client"
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/css';
+
+export default () => {
+  return (
+    <div>
+        <Swiper
+        slidesPerView={1}
+        >
+        <SwiperSlide className='bg-blue-500 text-center' >Slide 1</SwiperSlide>
+        <SwiperSlide className='bg-blue-500 text-center' >Slide 2</SwiperSlide>
+        </Swiper>
+    </div>
+  );
+};

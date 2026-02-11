@@ -28,10 +28,10 @@ export default function CheckoutPage() {
         display: {
           blocks: {
             banks: {
-              name: "Custom UPI View",
+              name: "MiriLux Gateway",
               instruments: [
                 {
-                  method: methodType, 
+                  method: methodType,
                 },
               ],
             },
@@ -42,7 +42,7 @@ export default function CheckoutPage() {
       },
 
       modal: {
-        ondismiss: function() {
+        ondismiss: function () {
           alert("Payment popup closed");
         }
       }
@@ -50,9 +50,9 @@ export default function CheckoutPage() {
 
     const paymentObject = new window.Razorpay(options);
     // 3. FAILURE HANDLER (If payment fails inside the modal)
-    paymentObject.on('payment.failed', function (response){
-        alert("Payment failed");
-        console.warn(response, "payment failed");
+    paymentObject.on('payment.failed', function (response) {
+      alert("Payment failed");
+      console.warn(response, "payment failed");
     });
     paymentObject.open();
   };
@@ -60,12 +60,12 @@ export default function CheckoutPage() {
   return (
     <div className="p-10">
       <Script src="https://checkout.razorpay.com/v1/checkout.js" />
-      
+
       <h2 className="text-xl font-bold mb-4">Choose Payment Method</h2>
-      
+
       <div className="space-y-4">
         {/* Custom UPI Button */}
-        <button 
+        <button
           onClick={() => processPayment('upi')}
           className="w-full border p-4 flex justify-between items-center rounded-lg hover:bg-gray-50"
         >
@@ -74,7 +74,7 @@ export default function CheckoutPage() {
         </button>
 
         {/* Custom Card Button */}
-        <button 
+        <button
           onClick={() => processPayment('card')}
           className="w-full border p-4 flex justify-between items-center rounded-lg hover:bg-gray-50"
         >

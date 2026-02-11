@@ -1,14 +1,10 @@
-### Fastest Pending Work ###
-1. Order Tracking Design
-2. New Order & Send to Admin Email
-### End ###
-
-
 ## Payment Gateway 
-RazorePay  
-id : rzp_test_S1P3MQVlSJJp1N
-secret : RdlJTFfilLuQfkOuvIbvZmvH
-
+### RazorPay
+1. Order Created in System 
+2. PayNow Button Clicked : Get Razore Order Id
+    - Request : order_token 
+    - Server : 
+4. 
 
 ## Booking System
 ### 1. Checkout Without Login
@@ -147,9 +143,7 @@ Amount Payable       ₹236.00
     - Username With Password Login
     - Two Factor Authentication : Applicable only with Password Login -- Email, Phone Number
 
-
-
 === Information Push to Github === 
 1. MYSQL Library...
+     - Update whereAnyLiks &  whereLike, whereIn
 2. useCart
-

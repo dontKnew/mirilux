@@ -14,10 +14,10 @@ export default async function Page() {
 
 
     // Render HTML
-    // const orderSevice = new OrderService();
-    // const order = await orderSevice.getOrderFull('OD-SAJI-103');
-    // const orderHtml = orderDetailsTemplate({ order });
-    // return <div className="max-w-3xl mx-auto bg-white shadow rounded" dangerouslySetInnerHTML={{ __html: orderHtml }} />
+    const orderSevice = new OrderService();
+    const order = await orderSevice.getOrderFull('OD-SAJI119');
+    const orderHtml = orderDetailsTemplate({ order });
+    return <div className="max-w-3xl mx-auto bg-white shadow rounded" dangerouslySetInnerHTML={{ __html: orderHtml }} />
 
 
 

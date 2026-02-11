@@ -47,18 +47,7 @@ export default function Popup({
               className={`w-full ${width} rounded-2xl bg-white shadow-xl`}
               onClick={(e) => e.stopPropagation()}
             >
-              {/* Header */}
-              {/* <div className="flex items-center justify-between border-b px-6 py-4">
-                <h3 className="text-lg font-semibold">{title}</h3>
-                <button
-                  onClick={onClose}
-                  className="rounded-full p-1 text-gray-500 hover:bg-gray-100"
-                >
-                  ✕
-                </button>
-              </div> */}
 
-              {/* Content */}
               <div className="md:px-6 px-4 py-5">{children}</div>
             </div>
           </motion.div>

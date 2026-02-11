@@ -10,13 +10,24 @@ let accessToken = null;
 
 class AuthClientService {
 
-  static setAccessToken(token, user) {
+  static async setAccessToken(token, user=null) {
     accessToken = token;
-    useGlobalState.getState().setAuthUser(user); // set logged user...
-    if(useGlobalState.getState().isCartAddress()){
-        const deliveryAddress = user.deliveryAddress;
-        useGlobalState.getState().setCartAddress(deliveryAddress);
+    if(!user){
+      user = await this.fetchUser();
     }
+    useGlobalState.getState().setAuthUser(user); 
+    if(useGlobalState.getState().isCartAddress()){
+      if(user?.deliveryAddress){
+          const deliveryAddress = user.deliveryAddress;
+          useGlobalState.getState().setCartAddress(deliveryAddress); 
+      }
+    }
+  }
+
+  static async fetchUser(){
+    const api = new ApiRequest();
+    const user = await api.send("/auth/profile"); 
+    return user.data;
   }
 
   static getAccessToken() {
@@ -28,14 +39,12 @@ class AuthClientService {
 
     try {
       const api = new ApiRequest();
-      const dataAccessToken = await api.send("/auth/refresh-token",{},{ credentials: true });
+      const dataAccessToken = await api.send("/auth/refresh-token");
       if (!dataAccessToken?.data) return; 
         accessToken = dataAccessToken.data;
 
-      // 2️⃣ fetch profile
-      const user = await api.send( "/auth/profile");
-      this.setAccessToken(accessToken, user.data);
-      
+      const user = await this.fetchUser();
+      await this.setAccessToken(accessToken, user.data);
     } catch (e) {
       // ❗ silent fail for guest users
       console.warn("Auth init failed:", e);

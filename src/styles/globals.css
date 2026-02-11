@@ -153,9 +153,16 @@ h1, h2, h3, h4, h5, h6 {
   @apply  bg-gradient-to-r from-[var(--from-primary)] to-[var(--to-primary)] hover:from-green-600 hover:to-green-700
 }
 
+.btn-secondary{
+  @apply  bg-gradient-to-r from-[var(--from-secondary)] to-[var(--to-secondary)] hover:from-green-600 hover:to-green-700
+}
+
 .btn-success{
   @apply  bg-gradient-to-r hover:from-[var(--from-primary)] hover:to-[var(--to-primary)] from-green-600 to-green-700
 }
-.swiper-wrapper{
-  @apply md:justify-center justify-start
-}
+
+
+
+
+
+

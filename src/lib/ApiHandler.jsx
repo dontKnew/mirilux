@@ -1,4 +1,5 @@
 import EncryptedServer from "@/lib/EncryptedServer";
+import { AuthService } from "@/services/AuthService";
 import { NextResponse } from "next/server";
 
 class ApiHandler {
@@ -8,9 +9,55 @@ class ApiHandler {
     this.server = new EncryptedServer();
     this.data = null;
     this.EncryptionMode = process.env.HAS_API_ENCRYPTED === "true";
+    const { pathname } = new URL(req.url);
+    this.is_auth_path = false;
+    if(pathname.includes("auth")){
+      if(!pathname.includes("refresh-token")){
+        this.is_auth_path = true;
+      }
+    }
+  }
+
+  async #validateAuthPath(){
+      if(this.is_auth_path){
+        const authService = new AuthService(this.req);
+        // const hasAuth = authService.hasAuth(this.req);
+        const authUser = await authService.getAuthUser(this.req);
+        console.warn("user", authUser);
+        
+        if(!hasAuth){
+          // throw new Error("Login is required");
+        }
+        // const tokenPayload = authService.getToken(this.req);
+        // if(tokenPayload?.user_role!="admin"){
+        //     throw new Error("Authorization failed");
+        // }
+      }
   }
 
   async request(){
+
+    // validation auth path
+    if(this.is_auth_path){
+        const authService = new AuthService(this.req);
+        const hasAuth = authService.hasAuth(this.req);
+        // console.warn(hasAuth, "has Auth");
+        // const authUser = await authService.getAuthUser(this.req);
+        // console.warn("user", authUser);
+
+        if(!hasAuth){
+          // throw new Error("Login is required");
+        }
+        // const tokenPayload = authService.getToken(this.req);
+        // if(tokenPayload?.user_role!="admin"){
+        //     throw new Error("Authorization failed");
+        // }
+      }
+
+    // end validation end path
+    console.warn(this.is_auth_path, "is auth path");
+
+    
     if(this.EncryptionMode){
         return await this.decryptRequest();
       }

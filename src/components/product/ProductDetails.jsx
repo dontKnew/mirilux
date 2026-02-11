@@ -1,8 +1,8 @@
 import { ProductService } from "@/services/ProductService";
 import { Zap, Truck, ShieldCheck, Banknote, Star, ThumbsUp, ThumbsDown, BanknoteIcon } from "lucide-react";
-import ProductGallery from "@/components/product/ProductGallery";
 import ProductCardButtons from "@/components/product/ProductCardButtons";
 import Container from "../layout/Container";
+import ProductGallery from "./ProductGallery";
 
 const REVIEWS_TO_SHOW = 4;
 
@@ -12,11 +12,15 @@ export default async function ProductDetails({ slug }) {
   return (
     
       <Container py={4}>
+
+
+        
+
         <div className="grid grid-cols-1 md:grid-cols-5 md:gap-10">
           {/* LEFT – PRODUCT GALLERY (FIXED) */}
           <div className="md:col-span-2">
             <div className="md:sticky md:top-24">
-              <ProductGallery images={product.images} />
+              <ProductGallery images={product.images} />      
             </div>
           </div>
             

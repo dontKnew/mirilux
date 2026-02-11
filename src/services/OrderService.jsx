@@ -28,6 +28,20 @@ export class OrderService {
     return order_token;
   }
 
+  async getTable({page, limit, search}){
+    return await DB.table(this.#table)
+    .select(['orders.*', "users.full_name", "users.phone_no", "users.email", "order_tracking.status as order_status"])
+    .leftJoin("users", "users.id", "=", this.#table+".user_id")
+    .leftJoin("order_tracking", "order_tracking.order_id", "=", this.#table+".id")
+    .whereAnyLike(['orders.order_number', 'users.phone_no', 'users.full_name', 'order_tracking.status'], search)
+    .orderBy("orders.id", "DESC")
+    .paginate(page, limit)
+  }
+
+  async count(){
+    return await DB.table(this.#table).count();
+  }
+
   async updateOrderTracking(order_id, status, message){
     if(!order_id){
       throw new Error("Order id is required");
@@ -133,9 +147,19 @@ export class OrderService {
     return address ;
   }
   
-  async deleteUser(value, key){
-    return await DB.table(this.#table).where(key, "=", value).delete();
-  }
+  async delete(value, key = 'id') {
+    const ref = DB.table(this.#table);
+    if (Array.isArray(value)) {
+        if (value.length > 0) {
+            ref.whereIn(key, value);
+        } else {
+            throw new Error("Value is required");
+        }
+    } else {
+        ref.where(key, "=", value);
+    }
+    return await ref.delete();
+}
 
   async createOrder(cartItems) {
     const orderItems = await this.#productService.getProductByCartItems(cartItems);
