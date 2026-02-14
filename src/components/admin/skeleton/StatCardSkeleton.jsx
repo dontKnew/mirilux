@@ -1,6 +1,6 @@
 export default function StatCardSkeleton() {
   return (
-    <div className="rounded-2xl border border-gray-200 p-5 shadow-sm bg-white">
+    <div className="rounded border border-gray-200 p-5 shadow-sm bg-white">
       <div className="animate-pulse flex items-start justify-between">
 
         {/* Left Section */}

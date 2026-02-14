@@ -1,5 +1,6 @@
 "use client";
 
+import LoginSkeleton from "@/components/admin/skeleton/LoginSkeleton";
 import BrandName from "@/components/ui/BrandName";
 import { useToast } from "@/components/ui/toast/ToastProvider";
 import { LOGIN_METHODS } from "@/data/constant";
@@ -40,6 +41,10 @@ export default function LoginPage() {
       showToast(e.message);
     }
   };
+
+  if(!hasAuthChecked){
+    return <LoginSkeleton />
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">

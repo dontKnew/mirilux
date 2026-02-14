@@ -12,7 +12,7 @@ export default function DataTableFooter({meta, setMeta, getPages }){
           <button
             disabled={meta.currentPage === 1}
             onClick={() => setMeta((p) => ({ ...p, currentPage: p.currentPage - 1 }))}
-            className="p-2 border border-gray-200 rounded-lg bg-white disabled:opacity-30 hover:bg-gray-50 transition-all"
+            className="p-2 border border-gray-200 rounded bg-white disabled:opacity-30 hover:bg-gray-50 transition-all"
           >
             <ChevronLeft size={18} />
           </button>
@@ -22,7 +22,7 @@ export default function DataTableFooter({meta, setMeta, getPages }){
               <button
                 key={p}
                 onClick={() => setMeta((m) => ({ ...m, currentPage: p }))}
-                className={`w-9 h-9 flex items-center justify-center rounded-lg border text-sm font-medium transition-all
+                className={`w-9 h-9 flex items-center justify-center rounded border text-sm font-medium transition-all
                   ${p === meta.currentPage
                     ? "bg-orange-500 border-orange-500 text-white shadow-md shadow-orange-200"
                     : "bg-white border-gray-200 text-gray-600 hover:border-orange-500 hover:text-orange-500"}`}
@@ -35,7 +35,7 @@ export default function DataTableFooter({meta, setMeta, getPages }){
           <button
             disabled={meta.currentPage === meta.lastPage}
             onClick={() => setMeta((p) => ({ ...p, currentPage: p.currentPage + 1 }))}
-            className="p-2 border border-gray-200 rounded-lg bg-white disabled:opacity-30 hover:bg-gray-50 transition-all"
+            className="p-2 border border-gray-200 rounded bg-white disabled:opacity-30 hover:bg-gray-50 transition-all"
           >
             <ChevronRight size={18} />
           </button>

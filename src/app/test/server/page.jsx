@@ -13,11 +13,21 @@ import { printJson } from "@/utils/array";
 export default async function Page() {
 
 
+    try {
+     const orderSevice = new OrderService();
+        const result = await orderSevice.getChartLines();
+        return printJson(result);  
+         
+    }catch(e){
+        console.warn(e);
+        return printJson(e);
+    }
+
     // Render HTML
-    const orderSevice = new OrderService();
-    const order = await orderSevice.getOrderFull('OD-SAJI119');
-    const orderHtml = orderDetailsTemplate({ order });
-    return <div className="max-w-3xl mx-auto bg-white shadow rounded" dangerouslySetInnerHTML={{ __html: orderHtml }} />
+    // const orderSevice = new OrderService();
+    // const order = await orderSevice.getOrderFull('OD-SAJI119');
+    // const orderHtml = orderDetailsTemplate({ order });
+    // return <div className="max-w-3xl mx-auto bg-white shadow rounded" dangerouslySetInnerHTML={{ __html: orderHtml }} />
 
 
 

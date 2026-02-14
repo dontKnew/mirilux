@@ -13,7 +13,7 @@ export async function POST(req) {
   const authService = new AuthService();
   try {
     const {order_token} = await api.request();
-    orderService.user = authService.getAuthUser();
+    orderService.user = await authService.getAuthUser();
     const data = await orderService.getOrder(order_token, "order_token"); // it will return order_token
     const priceData = {
       price:Number(data.product_amount),

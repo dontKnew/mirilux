@@ -8,7 +8,6 @@ export async function POST(req) {
   const orderService = new OrderService();
   const orderPaymentService = new OrderPaymentService();
   try {
-
     const {order_token, payment_method} = await api.request();
     orderPaymentService.order = await orderService.getOrder(order_token, 'order_token');
     if(!orderPaymentService.order){
@@ -18,7 +17,6 @@ export async function POST(req) {
     const data = await orderPaymentService.processPayment({payment_method});
     return api.response({ success: true, data:data});
   } catch (err) {
-    console.warn(err);  
     return api.responseFailPlain(err.message);
   }
 }

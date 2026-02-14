@@ -182,16 +182,18 @@ export default function DataTable({ title = "Table", endpoint, columns, enableEx
       />
 
       <div className="w-full">
-        <div className="block md:hidden divide-y divide-gray-100">
+        <div className="block md:hidden divide-y divide-gray-100 space-y-4">
           {
             loading ? (
               <TableMobileSkeleton rowsCount={meta.perPage} />
             ) : (
-              table.getRowModel().rows.map((row) => (
-                <div key={row.id} className="md:p-4 px-2 space-y-2 bg-white">
+              table.getRowModel().rows.map((row, index) => (
+                <div key={row.id} className="md:p-4 px-2 space-y-2 bg-white border-b border-gray-400 mb-5 pb-4">
+                    <div className="flex justify-center gap-4 bg-[var(--secondary)] text-white">
+                        {index+1}
+                    </div>
                   {row.getVisibleCells().map((cell) => (
                     <div key={cell.id} className="flex justify-between gap-4 text-sm">
-                      {/* FIX: Use flexRender here too! */}
                       <span className="font-semibold text-gray-500 uppercase text-[10px] tracking-wider">
                         {flexRender(cell.column.columnDef.header, cell.getContext())}
                       </span>
@@ -222,10 +224,10 @@ export default function DataTable({ title = "Table", endpoint, columns, enableEx
             </thead>
             <tbody className="divide-y divide-gray-100">
               {loading ? (
-                <TableDesktopSkeleton columnsCount={columns.length} rowsCount={meta.perPage} />
+                <TableDesktopSkeleton columnsCount={columns.length+2} rowsCount={meta.perPage} />
               ) : (
                 table.getRowModel().rows.map((row) => (
-                  <tr key={row.id} className="hover:bg-orange-50/30 transition-colors">
+                  <tr key={row.id} className="hover:bg-orange-100 transition-colors">
                     {row.getVisibleCells().map((cell) => (
                       <td key={cell.id} className="px-6 py-4 whitespace-nowrap">
                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -243,7 +245,7 @@ export default function DataTable({ title = "Table", endpoint, columns, enableEx
       <DataTableFooter meta={meta} setMeta={setMeta} getPages={getPages} />
     </div>
 
-    <Popup isOpen={showPopup}  >
+    <Popup isOpen={showPopup} onClose={()=>{setShowPopup(false)}}  >
       <div className="flex items-center justify-between pb-3 mb-2">
         <h3 className="text-xl font-bold text-gray-800 tracking-tight">
           {title} Details

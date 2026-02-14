@@ -55,7 +55,7 @@ class ApiHandler {
       }
 
     // end validation end path
-    console.warn(this.is_auth_path, "is auth path");
+    // console.warn(this.is_auth_path, "is auth path");
 
     
     if(this.EncryptionMode){

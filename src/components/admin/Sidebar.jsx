@@ -44,7 +44,7 @@ export default function Sidebar({ collapsed, mobileOpen, setMobileOpen }) {
                 key={item.name}
                 href={item.href}
                 className={`
-                  flex items-center gap-4 px-4 py-3 mx-2 rounded-lg
+                  flex items-center gap-4 px-4 py-3 mx-2 rounded
                   transition
                   ${active
                     ? "bg-[linear-gradient(to_right,var(--from-primary),var(--to-primary))]"

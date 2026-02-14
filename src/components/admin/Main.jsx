@@ -17,7 +17,7 @@ export default function Main({children}) {
       />
       <div className="flex-1">
         <Navbar setMobileOpen={setMobileOpen} />
-        <main className="p-2 md:p-4">
+        <main className="p-2">
           {children}
         </main>
       </div>

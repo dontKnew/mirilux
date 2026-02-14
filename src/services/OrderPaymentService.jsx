@@ -5,6 +5,7 @@ import { PAYMENT_METHOD, PAYMENT_STATUS, PAYMENT_COLLECTED_BY, ORDER_STATUS, ORD
 import EmailService from "./email/EmailService";
 import Razorpay from "razorpay";
 import crypto from 'crypto';
+import { after } from "next/server";
 
 
 export class OrderPaymentService{
@@ -75,29 +76,57 @@ export class OrderPaymentService{
   }
 
   async #createPaymentCOD(){
+    console.time("createPaymentCOD"); 
+    try {
+      console.warn("createPaymentCOD: Start...");
       const insertData = {
-        payment_method:PAYMENT_METHOD.COD,
-        payment_attempt_status:PAYMENT_ATTEMPT_STATUS.SUCCESS,
-        collection_status:COLLECTION_STATUS.PENDING,
+        payment_method: PAYMENT_METHOD.COD,
+        payment_attempt_status: PAYMENT_ATTEMPT_STATUS.SUCCESS,
+        collection_status: COLLECTION_STATUS.PENDING,
       };
-      const uniqueWhereas = {order_id:this.order.id, payment_method:insertData.payment_method, payment_attempt_status:insertData.payment_attempt_status};
-      const isExists = await DB.table(this.#table).whereEqual(uniqueWhereas).exists();
+
+      const uniqueWhereas = {
+        order_id: this.order.id,
+        payment_method: insertData.payment_method,
+        payment_attempt_status: insertData.payment_attempt_status
+      };
+
+      const isExists = await DB
+        .table(this.#table)
+        .whereEqual(uniqueWhereas)
+        .exists();
+
       if(isExists){
         throw new Error("Payment COD already created");
       }
 
-      const paymentData =  this.#createPayment(insertData);
-      const orderSevice = new OrderService();
-      await orderSevice.updateOrderTracking(this.order.id, ORDER_STATUS.CONFIRMED, ORDER_STATUS_MESSAGE.CONFIRMED);
-      
-      // Send Order Details Email
-      const order = await orderSevice.getOrderFull(this.order.id, 'id');
-      const emailResult = await EmailService.sendOrderDetails(order.user.email, order);
-      const adminEmail = WEBSITE.ADMIN_EMAIL;
-      const adminEmailResult = await EmailService.sendOrderDetails(adminEmail, order);
+      const paymentData = this.#createPayment(insertData);
+
+      // bg run
+      after(async ()=>{
+        console.warn("bg run")
+          const orderSevice = new OrderService();
+          await orderSevice.updateOrderTracking(
+            this.order.id,
+            ORDER_STATUS.CONFIRMED,
+            ORDER_STATUS_MESSAGE.CONFIRMED
+          );
+          const order = await orderSevice.getOrderFull(this.order.id, 'id');
+          await EmailService.sendOrderDetails(order.user.email, order);
+
+          const adminEmail = WEBSITE.ADMIN_EMAIL;
+          await EmailService.sendOrderDetails(adminEmail, order);
+          console.warn("end bg run")
+      })
+      // end bg run
 
       return paymentData;
-  } 
+
+    } finally {
+      console.timeEnd("createPaymentCOD"); // ⏱ END (auto ms print)
+    }
+}
+
 
    async #createPaymentGateway(data, paymentDetails){
       const gatewayResponse = {...data?.gateway_response, ...paymentDetails};
@@ -118,14 +147,18 @@ export class OrderPaymentService{
       }
 
       const paymentData =  this.#createPayment(insertData);
-      const orderSevice = new OrderService();
-      await orderSevice.updateOrderTracking(this.order.id, ORDER_STATUS.CONFIRMED, ORDER_STATUS_MESSAGE.CONFIRMED);
-      
-      // Send Order Details Email
-      const order = await orderSevice.getOrderFull(this.order.id, 'id');
-      const emailResult = await EmailService.sendOrderDetails(order.user.email, order);
-      const adminEmail = WEBSITE.ADMIN_EMAIL;
-      const adminEmailResult = await EmailService.sendOrderDetails(adminEmail, order);
+
+      // function in background
+      after(async ()=>{
+        const orderSevice = new OrderService();
+        await orderSevice.updateOrderTracking(this.order.id, ORDER_STATUS.CONFIRMED, ORDER_STATUS_MESSAGE.CONFIRMED);
+        
+        const order = await orderSevice.getOrderFull(this.order.id, 'id');
+        const emailResult = await EmailService.sendOrderDetails(order.user.email, order);
+        const adminEmail = WEBSITE.ADMIN_EMAIL;
+        const adminEmailResult = await EmailService.sendOrderDetails(adminEmail, order);
+      })
+      // End function in background
 
       return paymentData;
   } 
@@ -183,6 +216,71 @@ export class OrderPaymentService{
       }, 0);
       return Number(total_sum.toFixed(2));
     }
+
+async getChartLines() {
+  const queries = {
+    weekly: `
+      SELECT 
+        DATE_FORMAT(created_at, '%a') as label, 
+        SUM(CAST(paid_amount AS DECIMAL(10,2))) as income,
+        DATE(created_at) as date_val
+      FROM ${this.#table} 
+      WHERE collection_status = 'collected' 
+        AND created_at >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)
+      GROUP BY date_val, label 
+      ORDER BY date_val ASC;
+    `,
+
+    monthly: `
+      SELECT 
+        CONCAT('Week ', FLOOR((DAYOFMONTH(created_at) - 1) / 7) + 1) as label, 
+        SUM(CAST(paid_amount AS DECIMAL(10,2))) as income,
+        FLOOR((DAYOFMONTH(created_at) - 1) / 7) + 1 as week_num
+      FROM ${this.#table} 
+      WHERE collection_status = 'collected'
+        AND created_at >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
+      GROUP BY label, week_num
+      ORDER BY week_num ASC;
+    `,
+
+    yearly: `
+      SELECT 
+        DATE_FORMAT(created_at, '%Y-%m') as month_key,
+        DATE_FORMAT(created_at, '%b') as label, 
+        SUM(CAST(paid_amount AS DECIMAL(10,2))) as income 
+      FROM ${this.#table} 
+      WHERE collection_status = 'collected'
+        AND created_at >= DATE_SUB(CURDATE(), INTERVAL 1 YEAR)
+      GROUP BY month_key, label
+      ORDER BY month_key ASC;
+    `
+  };
+
+  try {
+    const [weekly, monthly, yearly] = await Promise.all([
+      DB.sql(queries.weekly),
+      DB.sql(queries.monthly),
+      DB.sql(queries.yearly)
+    ]);
+
+    // Format numbers properly before returning
+    const format = (data) => data.map(item => ({
+      ...item,
+      income: Number(parseFloat(item.income || 0).toFixed(2))
+    }));
+
+    return { 
+      weekly: format(weekly), 
+      monthly: format(monthly), 
+      yearly: format(yearly) 
+    };
+  } catch (error) {
+    console.error("Error fetching chart lines:", error);
+    return { weekly: [], monthly: [], yearly: [] };
+  }
+}
+
+
 
   
 }

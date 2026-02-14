@@ -1,7 +1,7 @@
 import { baseTemplate } from "./baseTemplate";
 
 export function orderDetailsTemplate({ order }) {
-  console.warn("Generating order details email for order:", order);
+  // console.warn("Generating order details email for order:", order);
   const address = order.order_address;
   const items = order.order_items || [];
   

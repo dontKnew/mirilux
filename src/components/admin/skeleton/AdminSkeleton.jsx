@@ -35,16 +35,6 @@ export default function AdminSkeleton() {
           {/* Dashboard Title */}
           <div className="h-8 bg-gray-200 rounded w-48 mb-6 animate-pulse"></div>
 
-          {/* Stats Grid (Cards) */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-            {[...Array(3)].map((_, i) => (
-              <div key={i} className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 h-32 flex flex-col justify-center animate-pulse">
-                <div className="h-3 bg-gray-100 w-24 mb-3"></div>
-                <div className="h-8 bg-gray-200 w-16"></div>
-              </div>
-            ))}
-          </div>
-
           {/* Large Table Content Skeleton */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 animate-pulse">
              <div className="h-4 bg-gray-200 rounded w-1/4 mb-4"></div>

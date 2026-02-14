@@ -13,7 +13,7 @@ export function StatCard({
       <div
         className="
         relative overflow-hidden
-        bg-white rounded-2xl p-5
+        bg-white rounded p-5
         border border-gray-200
         shadow-sm
         transition-all duration-300
